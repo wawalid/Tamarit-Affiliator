@@ -11,9 +11,9 @@ function LoginPage() {
     const { signin, isAuthenticated, errors: signinErrors } = useAuth();
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (isAuthenticated) navigate("/tasks")
-    }, [isAuthenticated])
+    // useEffect(() => {
+    //     if (isAuthenticated) navigate("/tasks")
+    // }, [isAuthenticated])
 
     const onSubmit = handleSubmit((data) => {
         signin(data)
@@ -24,7 +24,7 @@ function LoginPage() {
             <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md">
                 {
                     signinErrors.map((error, i) => (
-                        <div className="bg-red-500 p-2 text-white my-2 " key={i}>
+                        <div className="bg-red-500 p-2 text-white my-2" key={i}>
                             {error}
                         </div>
                     ))
