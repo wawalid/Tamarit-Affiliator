@@ -25,4 +25,5 @@ const afiliadoSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export default mongoose.model("EnlaceAfiliado", afiliadoSchema);
+export default mongoose.model("enlaces_afiliados", afiliadoSchema);
+

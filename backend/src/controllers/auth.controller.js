@@ -89,6 +89,30 @@ export const profile = async (req, res) => {
     })
 }
 
+export const updateUser = async (req, res) => {
+    const { username, email, password, dni, cuenta_bancaria, identidad } = req.body;
+    const userFound = await User.findById(req.user.id)
+
+    if (!userFound) return res.status(400).json({ message: "User not found" });
+
+    if (username) userFound.username = username
+    if (email) userFound.email = email
+    if (password) userFound.password = await bcrypt.hash(password, 10)
+    if (dni) userFound.dni = dni
+    if (cuenta_bancaria) userFound.cuenta_bancaria = cuenta_bancaria
+    if (identidad) userFound.identidad = identidad
+
+    const updatedUser = await userFound.save()
+
+    return res.json({
+        id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+    })
+}
+
 export const verifyToken = async (req, res) => {
     const {token} = req.cookies
 
