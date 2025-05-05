@@ -22,6 +22,7 @@ function ProfilePage() {
       setValue("dni", user.dni || "");
       setValue("cuenta_bancaria", user.cuenta_bancaria || "");
     }
+    console.log("user en profile", user);
   }, [user, setValue]);
 
   const onSubmit = async (data) => {

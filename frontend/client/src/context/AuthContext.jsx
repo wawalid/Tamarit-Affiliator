@@ -84,13 +84,15 @@ export const AuthProvider = ({ children }) => {
         const userCookie = Cookies.get("user");
         let userData = res.data;
         if (userCookie) {
-          try {
-            const parsedUser = JSON.parse(userCookie);
-            userData = {
-              ...userData,
-              ...parsedUser, 
-              completado: parsedUser.completado, // Asegúrate de agregar "completado" a userData
-            };
+            try {
+                const parsedUser = JSON.parse(userCookie);
+                userData = {
+                    ...userData,
+                    ...parsedUser, 
+                    //   completado: parsedUser.completado,
+                };
+                console.log("datos del usuario en el contexto", userData);
+                console.log("datos del usuario en la cookie", parsedUser);
           } catch (e) {
             console.error("Failed to parse user cookie", e);
           }
@@ -113,6 +115,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await updateUserRequest(user);
       setUser(res.data);
+      console.log("user actualizado", res.data);
     } catch (error) {
       console.log(error.response);
       setErrors(error.response.data);
