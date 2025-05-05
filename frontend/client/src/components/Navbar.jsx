@@ -14,6 +14,11 @@ function Navbar() {
         {isAuthenticated ? (
           <>
             <li>Welcome {user.username}</li>
+            {/* Mostrar el aviso si el usuario no ha completado su perfil */}
+            {!user.completado && (
+              <li className="text-red-500">Please complete your profile</li>
+            )}
+
             <li>
               <Link to={"/add-task"}>Add task</Link>
             </li>

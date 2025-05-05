@@ -4,27 +4,34 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
-  const { register, handleSubmit, setValue } = useForm();
-  const { user, getUser, updateUser } = useAuth(); // Asegúrate de tener una función updateUser en el contexto
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+  const { user, getUser, updateUser, errors: profileErrors } = useAuth();
   const navigate = useNavigate();
 
-  // Autocompletar los datos del usuario al cargar la página
   useEffect(() => {
     if (user) {
       setValue("username", user.username);
       setValue("email", user.email);
-      setValue("password", ""); // No autocompletes la contraseña por seguridad
+      setValue("password", ""); // No autocompletar la contraseña por seguridad
       setValue("identidad", user.identidad || "");
       setValue("dni", user.dni || "");
       setValue("cuenta_bancaria", user.cuenta_bancaria || "");
     }
   }, [user, setValue]);
 
-  // Manejar el envío del formulario
   const onSubmit = async (data) => {
+    if (!data.password) {
+      data.password = user.password; // Mantener la contraseña actual si no se proporciona una nueva
+    }
+
     try {
-      await updateUser(data); // Envía los datos actualizados al servidor
-      navigate("/"); // Redirige a otra página después de guardar
+      await updateUser(data);
+      // navigate("/profile");
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -36,6 +43,11 @@ function ProfilePage() {
       <div className="aside">
         <div>
           <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md flex flex-col align-content-center justify-center">
+            {profileErrors.map((error, i) => (
+              <div className="bg-red-500 p-2 text-white my-2" key={i}>
+                {error}
+              </div>
+            ))}
             <form onSubmit={handleSubmit(onSubmit)}>
               <input
                 type="text"
@@ -43,37 +55,53 @@ function ProfilePage() {
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
                 placeholder="Username"
               />
+              {errors.username && (
+                <p className="text-red-500">Username is required</p>
+              )}
+
               <input
                 type="email"
                 {...register("email", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
                 placeholder="Email"
               />
+              {errors.email && (
+                <p className="text-red-500">Email is required</p>
+              )}
               <input
                 type="password"
                 {...register("password")}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
                 placeholder="Password"
               />
+              {/* {errors.password && <p className="text-red-500">Password is required</p>} */}
               <h2>Datos bancarios</h2>
               <input
                 type="text"
-                {...register("identidad")}
+                {...register("identidad", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
                 placeholder="Identidad"
               />
+              {errors.identidad && (
+                <p className="text-red-500">Identidad is required</p>
+              )}
               <input
                 type="text"
-                {...register("dni")}
+                {...register("dni", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
                 placeholder="DNI"
               />
+              {errors.dni && <p className="text-red-500">DNI is required</p>}
               <input
                 type="text"
-                {...register("cuenta_bancaria")}
+                {...register("cuenta_bancaria", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
                 placeholder="Cuenta bancaria"
               />
+              {errors.cuenta_bancaria && (
+                <p className="text-red-500">Cuenta bancaria is required</p>
+              )}
+
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded-md my-2"

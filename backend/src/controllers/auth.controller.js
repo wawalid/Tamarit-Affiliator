@@ -24,6 +24,11 @@ export const register = async (req, res) => {
         const token = await createAccessToken({ id: userSaved._id });
 
         res.cookie("token", token);
+        res.cookie("user", JSON.stringify({
+            username: newUser.username,
+            email: newUser.email,
+            completado: newUser.completado,
+          }))
         res.json({
             id: userSaved._id,
             username: userSaved.username,
@@ -53,10 +58,17 @@ export const login = async (req, res) => {
         const token = await createAccessToken({ id: userFound._id });
 
         res.cookie("token", token);
+        res.cookie("user", JSON.stringify({
+            username: userFound.username,
+            email: userFound.email,
+            completado: userFound.completado,
+          }))
+
         res.json({
             id: userFound._id,
             username: userFound.username,
             email: userFound.email,
+            completado: userFound.completado,
             createdAt: userFound.createdAt,
             updatedAt: userFound.updatedAt,
         });
@@ -98,20 +110,34 @@ export const updateUser = async (req, res) => {
     if (username) userFound.username = username
     if (email) userFound.email = email
     if (password) userFound.password = await bcrypt.hash(password, 10)
-    if (dni) userFound.dni = dni
-    if (cuenta_bancaria) userFound.cuenta_bancaria = cuenta_bancaria
-    if (identidad) userFound.identidad = identidad
+    if (dni !== undefined) userFound.dni = dni
+    if (cuenta_bancaria !== undefined) userFound.cuenta_bancaria = cuenta_bancaria
+    if (identidad !== undefined) userFound.identidad = identidad
+
+    const completado = Boolean(userFound.dni && userFound.cuenta_bancaria && userFound.identidad);
+    userFound.completado = completado
 
     const updatedUser = await userFound.save()
+
+    res.cookie("user", JSON.stringify({
+        username: updatedUser.username,
+        email: updatedUser.email,
+        completado: updatedUser.completado,
+    }))
 
     return res.json({
         id: updatedUser._id,
         username: updatedUser.username,
         email: updatedUser.email,
+        dni: updatedUser.dni,
+        cuenta_bancaria: updatedUser.cuenta_bancaria,
+        identidad: updatedUser.identidad,
+        completado: updatedUser.completado,
         createdAt: updatedUser.createdAt,
         updatedAt: updatedUser.updatedAt,
     })
 }
+
 
 export const verifyToken = async (req, res) => {
     const {token} = req.cookies
