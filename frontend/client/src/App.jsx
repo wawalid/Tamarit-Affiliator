@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { AffiliateLinkProvider } from "./context/Affiliate_linksContext";
+import { TaskProvider } from "./context/TasksContext";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -11,13 +13,13 @@ import AffiliateFormPage from "./pages/AffiliateFormPage";
 import MyAffiliatesPage from "./pages/MyAffiliatesPage";
 
 import ProtectedRoute from "./ProtectedRoute";
-import { TaskProvider } from "./context/TasksContext";
 import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <AuthProvider>
       <TaskProvider>
+        <AffiliateLinkProvider>
         <BrowserRouter>
           <main className="container mx-auto p-10 bg-zinc-900 min-h-screen">
             <Navbar />
@@ -37,6 +39,7 @@ function App() {
             </Routes>
           </main>
         </BrowserRouter>
+        </AffiliateLinkProvider>
       </TaskProvider>
     </AuthProvider>
   );

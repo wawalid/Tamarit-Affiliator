@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { registerRequest, loginRequest, verifyTokenRequest, updateUserRequest } from "../api/auth";
 import Cookies from "js-cookie";
+import { registerRequest, loginRequest, verifyTokenRequest, updateUserRequest } from "../api/auth";
 
 
 
@@ -95,6 +95,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const res = await updateUserRequest(user)
             setUser(res.data)
+            console.log("datos del usuario al actualizar", res.data)
         } catch (error) {
             console.log(error.response)
             setErrors(error.response.data)

@@ -12,12 +12,11 @@ function Navbar() {
   return (
     <nav className="bg-zinc-800 my-3 flex justify-between py-5 px-10 rounded-lg">
       <Link to={"/"}>
-        <h1 className="text-2xl font-bold">task manager</h1>
+        <h1 className="text-2xl font-bold">Tamarit Affiliator</h1>
       </Link>
       <ul className="flex gap-x-5 text-white">
         {isAuthenticated ? (
           <>
-            <li>Welcome {user.username}</li>
             {/* Mostrar el aviso solo si el usuario no ha completado su perfil */}
             {user && !user.completado && (
           <li>
@@ -31,7 +30,7 @@ function Navbar() {
               <Link to={"/create-affiliate-link"}>Crear enlace de afiliado</Link>
             </li>
             <li>
-              <Link to={""}>Mis afiliaciones</Link>
+              <Link to={"/my-affiliates"}>Mis afiliaciones</Link>
             </li>
             <li>
               <Link to={"/profile"}>Profile</Link>

@@ -16,26 +16,19 @@ export const createAffiliateLink = async (req, res) => {
             enlace_utm,
             codigo_descuento,
         });
+        
 
         const savedEnlace = await newEnlace.save();
         res.json(savedEnlace);
     } catch (error) {
-        return res.status(500).json(["Error creating affiliate link"]);
+        return res.status(500).json(error.message);
     }        
 };
 
-export const getAffiliateLinks_user = async (req, res) => {
+//este es el que se usa para ver los enlaces de afiliado del usuario autenticado, segun si eres admin o no, veras todos los enlaces o no
+export const getAffiliateLinks = async (req, res) => {
     try {
         const enlaces = await EnlaceAfiliado.find({ user: req.user.id }).populate("user");
-        res.json(enlaces);
-    } catch (error) {
-        return res.status(500).json(["Error retrieving affiliate links"]);
-    }
-};
-
-export const getAffiliateLinks_admin = async (req, res) => {
-    try {
-        const enlaces = await EnlaceAfiliado.find().populate("user");
         res.json(enlaces);
     } catch (error) {
         return res.status(500).json(["Error retrieving affiliate links"]);

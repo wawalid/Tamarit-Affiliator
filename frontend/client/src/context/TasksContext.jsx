@@ -47,6 +47,14 @@ export function TaskProvider({ children }) {
     }
   };
 
+  const updateTask = async (id, task) => {
+    try {
+      await updateTaskRequest(id, task);
+    } catch (error) {
+      return res.status(500).json({ message: "Error updating task" });
+    }
+  };
+
   const deleteTask = async (id) => {
     try {
       const res = await deleteTaskRequest(id);
@@ -58,14 +66,6 @@ export function TaskProvider({ children }) {
       return res.status(500).json({ message: "Error deleting task" });
     }
   };
-
-  const updateTask = async (id, task) =>{
-    try {
-      await updateTaskRequest(id, task);
-    } catch (error) {
-      return res.status(500).json({ message: "Error updating task" });
-    }
-  }
 
   return (
     <TaskContext.Provider

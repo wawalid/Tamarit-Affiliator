@@ -1,8 +1,25 @@
+import { useAffiliateLinks } from "../context/Affiliate_linksContext";
+import { useEffect } from "react";
+import Affiliate_linkCard from "../components/Affiliate_linkCard";
+
+
 function MyAffiliatesPage() {
+  const { affiliate_links, getAffiliateLinks, loading } = useAffiliateLinks();
+
+  useEffect(() => {
+    getAffiliateLinks(); // cargamos los enlaces al montar
+  }, []);
+
+  if (loading) return <p className="text-white">Cargando enlaces...</p>;
+
+  if (affiliate_links.length === 0)
+    return <p className="text-white">No hay enlaces aún.</p>;
+
   return (
-    <div>
-      <h1>My Affiliates</h1>
-      <p>List of your affiliates will be displayed here.</p>
+    <div className="flex flex-col items-center space-y-4 p-4">
+      {affiliate_links.map((link) => (
+        <Affiliate_linkCard key={link._id} affiliate_link={link} />
+      ))}
     </div>
   );
 }
