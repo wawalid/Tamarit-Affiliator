@@ -6,7 +6,15 @@ const afiliadoSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  utm_codigo: {
+  nombre_enlace: {
+    type: String,
+    required: true,
+  },
+  enlace_original: {
+    type: String,
+    required: true,
+  },
+  enlace_utm: {
     type: String,
     unique: true,
     required: true,
@@ -25,5 +33,5 @@ const afiliadoSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export default mongoose.model("enlaces_afiliados", afiliadoSchema);
+export default mongoose.model("enlaces_afiliado", afiliadoSchema);
 

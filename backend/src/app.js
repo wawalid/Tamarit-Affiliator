@@ -5,7 +5,8 @@ import cors from 'cors';
 
 import authRoutes from "./routes/auth.routes.js";
 import taskRoutes from "./routes/tasks.routes.js";
-import affiliateLinksRouter from "./routes/affiliate_links.routes.js";
+import affiliateLinksRoutes from "./routes/affiliate_links.routes.js";
+import accessoryRoutes from "./routes/accessory.routes.js";
 
 const app = express()
 
@@ -19,7 +20,8 @@ app.use(cookieParser());
 
 app.use("/api", authRoutes);
 app.use("/api", taskRoutes);
-app.use("/api", affiliateLinksRouter);
+app.use("/api", affiliateLinksRoutes);
+app.use("/api", accessoryRoutes);
 
 
 export default app;

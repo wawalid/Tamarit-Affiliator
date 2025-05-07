@@ -22,7 +22,6 @@ function ProfilePage() {
       setValue("dni", user.dni || "");
       setValue("cuenta_bancaria", user.cuenta_bancaria || "");
     }
-    console.log("user en profile", user);
   }, [user, setValue]);
 
   const onSubmit = async (data) => {
@@ -40,10 +39,10 @@ function ProfilePage() {
 
   return (
     <div>
-      <h1>Profile Page</h1>
+      {/* <h1>Profile Page</h1> */}
       <div className="aside">
-        <div>
-          <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md flex flex-col align-content-center justify-center">
+        <div className="flex flex-col items-center justify-center bg-zinc-900 text-white">
+          <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md">
             {profileErrors.map((error, i) => (
               <div className="bg-red-500 p-2 text-white my-2" key={i}>
                 {error}

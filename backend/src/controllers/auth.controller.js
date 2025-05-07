@@ -23,15 +23,10 @@ export const register = async (req, res) => {
     const token = await createAccessToken({ id: userSaved._id });
 
     res.cookie("token", token);
-    res.cookie(
-      "user",
-      JSON.stringify({
-        username: newUser.username,
-        email: newUser.email,
-      })
-    );
     res.json({
       id: userSaved._id,
+      username: userSaved.username,
+      email: userSaved.email,
       createdAt: userSaved.createdAt,
       updatedAt: userSaved.updatedAt,
     });
@@ -54,22 +49,16 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(400).json(["Invalid password"]);
 
     const token = await createAccessToken({ id: userFound._id });
-
     res.cookie("token", token);
-    res.cookie(
-      "user",
-      JSON.stringify({
-        username: userFound.username,
-        email: userFound.email,
-        completado: userFound.completado,
-        dni: userFound.dni,
-        cuenta_bancaria: userFound.cuenta_bancaria,
-        identidad: userFound.identidad,
-      })
-    );
 
     res.json({
       id: userFound._id,
+      username: userFound.username,
+      email: userFound.email,
+      dni: userFound.dni,
+      cuenta_bancaria: userFound.cuenta_bancaria,
+      identidad: userFound.identidad,
+      completado: userFound.completado,
       createdAt: userFound.createdAt,
       updatedAt: userFound.updatedAt,
     });
@@ -161,6 +150,14 @@ export const verifyToken = async (req, res) => {
       id: userFound._id,
       username: userFound.username,
       email: userFound.email,
+      id: userFound._id,
+      username: userFound.username,
+      email: userFound.email,
+      dni: userFound.dni,
+      cuenta_bancaria: userFound.cuenta_bancaria,
+      identidad: userFound.identidad,
+      completado: userFound.completado,
+      createdAt: userFound.createdAt,
     });
   });
 };

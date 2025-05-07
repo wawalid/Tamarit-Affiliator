@@ -7,6 +7,8 @@ import TaskPage from "./pages/TaskPage";
 import HomePage from "./pages/HomePage";
 import TaskFormPage from "./pages/TaskFormPage";
 import ProfilePage from "./pages/ProfilePage";
+import AffiliateFormPage from "./pages/AffiliateFormPage";
+import MyAffiliatesPage from "./pages/MyAffiliatesPage";
 
 import ProtectedRoute from "./ProtectedRoute";
 import { TaskProvider } from "./context/TasksContext";
@@ -27,6 +29,9 @@ function App() {
                 <Route path="/tasks" element={<TaskPage />} />
                 <Route path="/add-task" element={<TaskFormPage />} />
                 <Route path="/tasks/:id" element={<TaskFormPage />} />
+                <Route path="/create-affiliate-link" element={<AffiliateFormPage />} />
+                <Route path="/my-affiliates" element={<MyAffiliatesPage />} />
+                
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
             </Routes>
