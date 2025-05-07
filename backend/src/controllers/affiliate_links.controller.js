@@ -30,6 +30,7 @@ export const getAffiliateLinks = async (req, res) => {
     try {
         const enlaces = await EnlaceAfiliado.find({ user: req.user.id }).populate("user");
         res.json(enlaces);
+        console.log("usuario es admin", req.user)
     } catch (error) {
         return res.status(500).json(["Error retrieving affiliate links"]);
     }

@@ -12,8 +12,14 @@ function MyAffiliatesPage() {
 
   if (loading) return <p className="text-white">Cargando enlaces...</p>;
 
-  if (affiliate_links.length === 0)
-    return <p className="text-white">No hay enlaces aún.</p>;
+  if (affiliate_links.length === 0) {
+    return (
+      <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md flex items-center justify-center">
+        <h1 className="text-white">No tienes enlaces de afiliado</h1>
+      </div>
+    );
+  }
+  
 
   return (
     <div className="flex flex-col items-center space-y-4 p-4">

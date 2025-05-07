@@ -37,6 +37,7 @@ export const register = async (req, res) => {
   }
 };
 
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -59,6 +60,7 @@ export const login = async (req, res) => {
       cuenta_bancaria: userFound.cuenta_bancaria,
       identidad: userFound.identidad,
       completado: userFound.completado,
+      is_admin: userFound.is_admin,
       createdAt: userFound.createdAt,
       updatedAt: userFound.updatedAt,
     });
@@ -111,17 +113,7 @@ export const updateUser = async (req, res) => {
 
   const updatedUser = await userFound.save();
 
-  res.cookie(
-    "user",
-    JSON.stringify({
-      username: updatedUser.username,
-      email: updatedUser.email,
-      completado: updatedUser.completado,
-      dni: updatedUser.dni,
-      cuenta_bancaria: updatedUser.cuenta_bancaria,
-      identidad: updatedUser.identidad,
-    })
-  );
+
 
   return res.json({
     id: updatedUser._id,
@@ -157,6 +149,7 @@ export const verifyToken = async (req, res) => {
       cuenta_bancaria: userFound.cuenta_bancaria,
       identidad: userFound.identidad,
       completado: userFound.completado,
+      is_admin: userFound.is_admin,
       createdAt: userFound.createdAt,
     });
   });

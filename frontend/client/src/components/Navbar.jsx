@@ -19,18 +19,20 @@ function Navbar() {
           <>
             {/* Mostrar el aviso solo si el usuario no ha completado su perfil */}
             {user && !user.completado && (
-          <li>
-            <span className="text-red-500">Complete su perfil</span>
-          </li>
-        )}
+              <li>
+                <span className="text-red-500">Complete su perfil</span>
+              </li>
+            )}
+            {user.is_admin && (
+              <li>
+                <p>Admin</p>
+              </li>
+            )}
             <li>
-              <Link to={"/add-task"}>Add task</Link>
+              <Link to={"/create-affiliate-link"}>Crear afiliado</Link>
             </li>
             <li>
-              <Link to={"/create-affiliate-link"}>Crear enlace de afiliado</Link>
-            </li>
-            <li>
-              <Link to={"/my-affiliates"}>Mis afiliaciones</Link>
+              <Link to={"/my-affiliates"}>Afiliaciones</Link>
             </li>
             <li>
               <Link to={"/profile"}>Profile</Link>

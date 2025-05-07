@@ -11,7 +11,7 @@ function Affiliate_linkCard({ affiliate_link }) {
         <h1 className="text-2xl font-bold">{affiliate_link.nombre_enlace}</h1>
       </header>
 
-      {/* Enlace con tooltip */}
+
       <div className="relative group w-full text-center mb-4">
         <p className="text-slate-300 text-sm truncate">
           {affiliate_link.enlace_utm}

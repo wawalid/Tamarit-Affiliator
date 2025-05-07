@@ -41,7 +41,7 @@ function AffiliateFormPage() {
   return (
     <div className="flex flex-col items-center justify-center bg-zinc-900 text-white min-h-screen">
       <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md">
-        <h1 className="text-xl font-bold mb-4">Generar Enlace de afiliado</h1>
+        <h1 className="text-xl font-bold mb-4 text-center">Generar Enlace de afiliado</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
             type="text"

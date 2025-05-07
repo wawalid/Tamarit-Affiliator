@@ -15,7 +15,7 @@ function LoginPage() {
     }
 
     useEffect(() => {
-        if (isAuthenticated) navigate("/tasks")
+        if (isAuthenticated) navigate("/")
     }, [isAuthenticated])
 
     const onSubmit = handleSubmit((data) => {
