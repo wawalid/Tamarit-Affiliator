@@ -25,7 +25,7 @@ function Navbar() {
             )}
             {user.is_admin && (
               <li>
-                <p>Admin</p>
+                <Link to={"/admin_page"}>Panel admin</Link>
               </li>
             )}
             <li>
