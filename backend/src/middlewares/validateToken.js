@@ -7,6 +7,8 @@ export const authRequired = (req, res, next) => {
 
     jwt.verify(token, TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403).json({message: "Invalid token"});
+        // console.log("usuario en el middleware auth, req.user:", req.user)
+        // console.log("usuario en el middleware auth, user:", user)
         req.user = user
         next();
     })

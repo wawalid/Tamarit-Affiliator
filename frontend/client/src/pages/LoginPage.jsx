@@ -10,9 +10,6 @@ function LoginPage() {
 
     const {user, signin, isAuthenticated, errors: signinErrors } = useAuth();
     const navigate = useNavigate()
-    if (user){
-        console.log("user", user)
-    }
 
     useEffect(() => {
         if (isAuthenticated) navigate("/")

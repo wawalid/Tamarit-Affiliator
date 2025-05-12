@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import Cookies from "js-cookie";
 import { registerRequest, loginRequest, verifyTokenRequest, updateUserRequest } from "../api/auth";
+import { getUsersRequest } from "../api/users";
 
 
 
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(true)
+    const [users, setUsers] = useState([]);
 
     const signup = async (user) => {
         try {
@@ -52,6 +54,35 @@ export const AuthProvider = ({ children }) => {
         setUser(null)
     }
 
+    
+    const updateUser = async (user) => {
+        try {
+            const res = await updateUserRequest(user)
+            setUser(res.data)
+            console.log("datos del usuario al actualizar", res.data)
+        } catch (error) {
+            console.log(error.response)
+            setErrors(error.response.data)
+        }
+    }
+
+
+    // parametro puede ser un mismo usuario, un parametro de busqueda o cualquiera otra cosa, esto lo empezare a implementar para ahorrarme crear muchas funciones muy similares pero que hacen cosas distintas
+    const getUsers = async (parametro = "") => {
+        try {
+          const res = await getUsersRequest(parametro);
+          console.log(res.data);
+          setUsers(res.data);
+    
+        } catch (error) {
+          console.log(error);
+        }
+      };
+          
+
+
+
+// Use effects
     useEffect(() => {
         if (errors.length > 0) {
             const timer = setTimeout(() => {
@@ -90,22 +121,8 @@ export const AuthProvider = ({ children }) => {
 
         checkLogin()
     }, [])
-
-    const updateUser = async (user) => {
-        try {
-            const res = await updateUserRequest(user)
-            setUser(res.data)
-            console.log("datos del usuario al actualizar", res.data)
-        } catch (error) {
-            console.log(error.response)
-            setErrors(error.response.data)
-        }
-    }
-
-
-
-
-    return <AuthContext.Provider value={{ signup, signin, logout, updateUser, loading, user, isAuthenticated, errors }}>
+    
+    return <AuthContext.Provider value={{ signup, signin, logout, updateUser,getUsers, loading, user,users, isAuthenticated, errors }}>
         {children}
     </AuthContext.Provider>
 
