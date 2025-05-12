@@ -11,7 +11,8 @@ import TaskFormPage from "./pages/TaskFormPage";
 import ProfilePage from "./pages/ProfilePage";
 import AffiliateFormPage from "./pages/AffiliateFormPage";
 import MyAffiliatesPage from "./pages/MyAffiliatesPage";
-import ProtectedRoute from "./ProtectedRoute";
+import Auth_ProtectedRoute from "./ProtectedRoute";
+import Completado_Route from "./Completado_Route";
 import Navbar from "./components/Navbar";
 import AdminPage from "./pages/AdminPage";
 import AdminRoute from "./AdminRoute";
@@ -28,15 +29,14 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
-                <Route element={<ProtectedRoute />}>
+                <Route element={<Auth_ProtectedRoute />}>
                   <Route path="/tasks" element={<TaskPage />} />
                   <Route path="/add-task" element={<TaskFormPage />} />
                   <Route path="/tasks/:id" element={<TaskFormPage />} />
-                  <Route
-                    path="/create-affiliate-link"
-                    element={<AffiliateFormPage />}
-                  />
+                  <Route element={<Completado_Route />}>
+                  <Route path="/create-affiliate-link" element={<AffiliateFormPage />} />
                   <Route path="/my-affiliates" element={<MyAffiliatesPage />} />
+                  </Route>
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route element={<AdminRoute />}>
                     <Route path="/admin_page" element={<AdminPage />} />

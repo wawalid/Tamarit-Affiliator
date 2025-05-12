@@ -35,10 +35,10 @@ export const AffiliateLinkProvider = ({ children }) => {
     try {
       const res = await createAffiliateLinkRequest(affiliate_link);
       console.log("Affiliate link created successfully");
-      console.log(res.data);
+      return true
     } catch (error) {
-      console.log(error.response);
       setErrors(error.response.data);
+      return false
     }
   };
 

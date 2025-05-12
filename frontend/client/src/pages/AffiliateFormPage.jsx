@@ -6,12 +6,18 @@ import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 
 function AffiliateFormPage() {
   const { user } = useAuth();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const [utmLink, setUtmLink] = useState("");
-  const { createAffiliateLink } = useAffiliateLinks();
+  const { createAffiliateLink, errors: affiliate_linkErrors } =
+    useAffiliateLinks();
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const { nombre_campaña, enlace_original, codigo_descuento } = data;
 
     try {
@@ -22,7 +28,6 @@ function AffiliateFormPage() {
       baseUrl.searchParams.set("utm_campaign", nombre_campaña);
 
       const enlace_utm = baseUrl.toString();
-      setUtmLink(enlace_utm);
 
       const affiliateLink = {
         nombre_enlace: nombre_campaña,
@@ -31,8 +36,10 @@ function AffiliateFormPage() {
         codigo_descuento,
       };
 
-      createAffiliateLink(affiliateLink);
-      // navigate("/my-affiliates");
+      const success = await createAffiliateLink(affiliateLink);
+      if (success) {
+        setUtmLink(enlace_utm);
+      }
     } catch (error) {
       console.error("URL inválida:", error);
     }
@@ -41,7 +48,31 @@ function AffiliateFormPage() {
   return (
     <div className="flex flex-col items-center justify-center bg-zinc-900 text-white min-h-screen">
       <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md">
-        <h1 className="text-xl font-bold mb-4 text-center">Generar Enlace de afiliado</h1>
+        {errors.nombre_campaña && (
+          <div className="bg-red-500 p-2 text-white my-2">
+            El nombre de campaña es obligatorio.
+          </div>
+        )}
+        {errors.enlace_original && (
+          <div className="bg-red-500 p-2 text-white my-2">
+            El enlace original es obligatorio.
+          </div>
+        )}
+        {errors.codigo_descuento && (
+          <div className="bg-red-500 p-2 text-white my-2">
+            El código de descuento es obligatorio.
+          </div>
+        )}
+
+        {affiliate_linkErrors.map((error, i) => (
+          <div className="bg-red-500 p-2 text-white my-2" key={i}>
+            {error}
+          </div>
+        ))}
+
+        <h1 className="text-xl font-bold mb-4 text-center">
+          Generar Enlace de afiliado
+        </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
             type="text"

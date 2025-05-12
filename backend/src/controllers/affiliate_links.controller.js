@@ -16,7 +16,7 @@ export const createAffiliateLink = async (req, res) => {
             enlace_utm,
             codigo_descuento,
         });
-        
+    
 
         const savedEnlace = await newEnlace.save();
         res.json(savedEnlace);

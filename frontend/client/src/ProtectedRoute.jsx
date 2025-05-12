@@ -2,7 +2,7 @@ import {useAuth} from './context/AuthContext'
 import {Navigate, Outlet} from 'react-router-dom'
 import {useEffect} from 'react'
 
-function ProtectedRoute() {
+function Auth_ProtectedRoute() {
 
     const {loading, isAuthenticated} = useAuth()
     if (loading) {
@@ -16,4 +16,4 @@ function ProtectedRoute() {
     return <Outlet /> 
 }
     
-export default ProtectedRoute
+export default Auth_ProtectedRoute

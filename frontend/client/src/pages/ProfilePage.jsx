@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function ProfilePage() {
+  const location = useLocation();
+  const [mensaje, setMensaje] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -24,6 +27,19 @@ function ProfilePage() {
     }
   }, [user, setValue]);
 
+  useEffect(() => {
+    if (location.state?.message && user?.completado === false) {
+      setMensaje(location.state.message);
+  
+      const timer = setTimeout(() => {
+        setMensaje(null);
+      }, 5000);
+  
+      return () => clearTimeout(timer); // Limpia el timeout si cambia o se desmonta
+    }
+  }, [location.state, user]);
+  
+
   const onSubmit = async (data) => {
     if (!data.password) {
       data.password = user.password; // Mantener la contraseña actual si no se proporciona una nueva
@@ -39,7 +55,12 @@ function ProfilePage() {
 
   return (
     <div>
-      {/* <h1>Profile Page</h1> */}
+      {mensaje && (
+        <div className="bg-red-500 text-black p-4 rounded mb-6 text-center">
+          {mensaje}
+        </div>
+      )}
+
       <div className="aside">
         <div className="flex flex-col items-center justify-center bg-zinc-900 text-white">
           <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md">

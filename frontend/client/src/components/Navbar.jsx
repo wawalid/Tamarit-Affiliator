@@ -28,12 +28,16 @@ function Navbar() {
                 <Link to={"/admin_page"}>Panel admin</Link>
               </li>
             )}
-            <li>
-              <Link to={"/create-affiliate-link"}>Crear afiliado</Link>
-            </li>
-            <li>
-              <Link to={"/my-affiliates"}>Afiliaciones</Link>
-            </li>
+            {user && !user.is_admin && (
+              <>
+                <li>
+                  <Link to={"/create-affiliate-link"}>Crear afiliado</Link>
+                </li>
+                <li>
+                  <Link to={"/my-affiliates"}>Afiliaciones</Link>
+                </li>
+              </>
+            )}
             <li>
               <Link to={"/profile"}>Profile</Link>
             </li>
