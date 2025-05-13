@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
             setUser(res.data)
             setIsAuthenticated(true)
             console.log("datos del usuario al iniciar sesion", res.data)
-
         } catch (error) {
             console.log(error.response)
             setErrors(error.response.data)

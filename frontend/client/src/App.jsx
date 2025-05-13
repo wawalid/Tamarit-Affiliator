@@ -36,10 +36,10 @@ function App() {
                   <Route path="/tasks" element={<TaskPage />} />
                   <Route path="/add-task" element={<TaskFormPage />} />
                   <Route path="/tasks/:id" element={<TaskFormPage />} />
-                  <Route element={<Completado_Route />}>
-                  <Route path="/create-affiliate-link" element={<AffiliateFormPage />} />
-                  <Route path="/my-affiliates" element={<MyAffiliatesPage />} />
-                  </Route>
+                            <Route element={<Completado_Route />}>
+                                    <Route path="/create-affiliate-link" element={<AffiliateFormPage />} />
+                                    <Route path="/my-affiliates" element={<MyAffiliatesPage />} />
+                            </Route>
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route element={<AdminRoute />}>
                     <Route path="/admin_page" element={<AdminPage />} />

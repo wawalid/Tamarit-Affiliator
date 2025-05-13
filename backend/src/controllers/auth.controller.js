@@ -55,6 +55,7 @@ export const register = async (req, res) => {
       id: userSaved._id,
       username: userSaved.username,
       email: userSaved.email,
+      completado: userSaved.completado,
       createdAt: userSaved.createdAt,
       updatedAt: userSaved.updatedAt,
     });
@@ -123,7 +124,6 @@ export const profile = async (req, res) => {
     updatedAt: userFound.updatedAt,
   });
 };
-
 
 
 export const updateUser = async (req, res) => {
