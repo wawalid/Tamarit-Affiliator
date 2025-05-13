@@ -7,7 +7,7 @@ function MyAffiliatesPage() {
   const { affiliate_links, getAffiliateLinks, loading } = useAffiliateLinks();
 
   useEffect(() => {
-    getAffiliateLinks(); // cargamos los enlaces al montar
+    getAffiliateLinks();
   }, []);
 
   if (loading) return <p className="text-white">Cargando enlaces...</p>;

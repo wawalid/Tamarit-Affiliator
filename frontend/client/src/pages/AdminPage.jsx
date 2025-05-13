@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { format } from "date-fns";
-import { Link } from "react-router-dom"; // <--- Aquí
+import { Link } from "react-router-dom";
 
 function AdminPage() {
   const { getUsers, users } = useAuth();
