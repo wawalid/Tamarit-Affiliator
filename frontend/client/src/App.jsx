@@ -3,6 +3,9 @@ import { AuthProvider } from "./context/AuthContext";
 import { AffiliateLinkProvider } from "./context/Affiliate_linksContext";
 import { TaskProvider } from "./context/TasksContext";
 
+import Auth_ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
+
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import TaskPage from "./pages/TaskPage";
@@ -11,11 +14,11 @@ import TaskFormPage from "./pages/TaskFormPage";
 import ProfilePage from "./pages/ProfilePage";
 import AffiliateFormPage from "./pages/AffiliateFormPage";
 import MyAffiliatesPage from "./pages/MyAffiliatesPage";
-import Auth_ProtectedRoute from "./ProtectedRoute";
 import Completado_Route from "./Completado_Route";
 import Navbar from "./components/Navbar";
 import AdminPage from "./pages/AdminPage";
-import AdminRoute from "./AdminRoute";
+import UserDetailPage from "./pages/UserDetailPage";
+
 
 function App() {
   return (
@@ -40,6 +43,7 @@ function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route element={<AdminRoute />}>
                     <Route path="/admin_page" element={<AdminPage />} />
+                    <Route path="/user/:id" element={<UserDetailPage />} />
                   </Route>
                 </Route>
               </Routes>

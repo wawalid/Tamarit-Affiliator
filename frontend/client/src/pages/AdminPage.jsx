@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { format } from "date-fns";  // Importamos la función format de date-fns
+import { format } from "date-fns";
+import { Link } from "react-router-dom"; // <--- Aquí
 
 function AdminPage() {
-  const { getUsers, users } = useAuth(); 
+  const { getUsers, users } = useAuth();
 
   useEffect(() => {
     getUsers();
@@ -22,19 +23,26 @@ function AdminPage() {
                 <th className="py-3 px-4">Usuario</th>
                 <th className="py-3 px-4">Verificado</th>
                 <th className="py-3 px-4">Completado</th>
-                <th className="py-3 px-4">Baneado</th>
                 <th className="py-3 px-4">Fecha de Registro</th>
               </tr>
             </thead>
             <tbody>
               {users.map((user, index) => (
                 <tr key={index} className="border-t border-zinc-700 hover:bg-zinc-600">
-                  <td className="py-3 px-4">{user.username}</td>
+                  <td className="py-3 px-4">
+                    <Link
+                      to={`/user/${user._id}`}
+                      className="text-blue-400 hover:underline"
+                    >
+                      {user.username}
+                    </Link>
+                  </td>
                   <td className="py-3 px-4">{user.is_verified ? "Sí" : "No"}</td>
                   <td className="py-3 px-4">{user.completado ? "Sí" : "No"}</td>
-                  <td className="py-3 px-4">{user.is_banned ? "Sí" : "No"}</td>
                   <td className="py-3 px-4">
-                    {user.fecha_registro ? format(new Date(user.fecha_registro), 'dd/MM/yyyy HH:mm') : "Fecha no disponible"}
+                    {user.fecha_registro
+                      ? format(new Date(user.fecha_registro), "dd/MM/yyyy HH:mm")
+                      : "Fecha no disponible"}
                   </td>
                 </tr>
               ))}

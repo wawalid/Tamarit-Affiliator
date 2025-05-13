@@ -20,7 +20,7 @@ function ProfilePage() {
     if (user) {
       setValue("username", user.username);
       setValue("email", user.email);
-      setValue("password", ""); // No autocompletar la contraseña por seguridad
+      setValue("password", "");
       setValue("identidad", user.identidad || "");
       setValue("dni", user.dni || "");
       setValue("cuenta_bancaria", user.cuenta_bancaria || "");
@@ -35,14 +35,14 @@ function ProfilePage() {
         setMensaje(null);
       }, 5000);
   
-      return () => clearTimeout(timer); // Limpia el timeout si cambia o se desmonta
+      return () => clearTimeout(timer);
     }
   }, [location.state, user]);
   
 
   const onSubmit = async (data) => {
     if (!data.password) {
-      data.password = user.password; // Mantener la contraseña actual si no se proporciona una nueva
+      data.password = user.password; 
     }
 
     try {

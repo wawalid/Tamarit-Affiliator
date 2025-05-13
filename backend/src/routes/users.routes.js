@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
-import {isAdmin} from "../middlewares/isAdmin.js"
+import {adminRequired} from "../middlewares/adminRequired.js"
 import { getUsers } from "../controllers/users.controller.js";
 
 const router = Router()
 
-router.get("/users", authRequired, isAdmin, getUsers)
+router.get("/users", authRequired, adminRequired, getUsers)
 
 
 export default router 

@@ -25,12 +25,29 @@ export const createAffiliateLink = async (req, res) => {
     }        
 };
 
+
+
+export const getAffiliateLinksByUserId = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const enlaces = await EnlaceAfiliado.find({user: id}).populate("user");
+
+        res.json(enlaces);
+    } catch (error) {
+        return res.status(500).json(["Error retrieving affiliate links for user"]);
+    }
+};
+
+
+
+
 //este es el que se usa para ver los enlaces de afiliado del usuario autenticado, segun si eres admin o no, veras todos los enlaces o no
 export const getAffiliateLinks = async (req, res) => {
     try {
         const enlaces = await EnlaceAfiliado.find({ user: req.user.id }).populate("user");
+        // console.log("enlaces", enlaces)
         res.json(enlaces);
-        console.log("usuario es admin", req.user)
     } catch (error) {
         return res.status(500).json(["Error retrieving affiliate links"]);
     }

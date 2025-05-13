@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getAffiliateLinksRequest, createAffiliateLinkRequest, deleteAffiliateLinkRequest } from "../api/affiliate_links";
+import { getAffiliateLinksRequest, getAffiliateLinkbyIDRequest, createAffiliateLinkRequest, deleteAffiliateLinkRequest } from "../api/affiliate_links";
 
 export const Affiliate_linkContext = createContext();
 
@@ -19,6 +19,18 @@ export const AffiliateLinkProvider = ({ children }) => {
   const [errors, setErrors] = useState([]);
 
   
+  const getAffiliateLinkbyId = async (id) => {
+    try {
+      const res = await getAffiliateLinkbyIDRequest(id);
+      setAffiliateLinks(res.data);
+      console.log("enlace obtenido:", res.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error.response);
+      setErrors(error.response.data);
+    }
+  }
+
   const getAffiliateLinks = async () => {
     try {
       const res = await getAffiliateLinksRequest();
@@ -70,6 +82,7 @@ export const AffiliateLinkProvider = ({ children }) => {
     <Affiliate_linkContext.Provider
       value={{
         affiliate_links,
+        getAffiliateLinkbyId,
         getAffiliateLinks,
         createAffiliateLink,
         deleteAffiliateLink,
