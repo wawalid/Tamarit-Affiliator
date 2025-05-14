@@ -21,8 +21,8 @@ function LoginPage() {
     
 
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md">
+        <div className="overflow-hidden flex items-center justify-center h-screen">
+            <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md m-auto">
                 {
                     signinErrors.map((error, i) => (
                         <div className="bg-red-500 p-2 text-white my-2" key={i}>

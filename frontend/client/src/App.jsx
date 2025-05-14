@@ -26,7 +26,7 @@ function App() {
       <TaskProvider>
         <AffiliateLinkProvider>
           <BrowserRouter>
-<main className="container mx-auto px-4 py-2 bg-zinc-900 min-h-screen">
+<main className="container h-[(100vh-100px)] mx-auto px-4 py-2 bg-zinc-900 min-h-screen">
 
               <Navbar />
               <Routes>
