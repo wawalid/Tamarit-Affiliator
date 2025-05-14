@@ -29,26 +29,35 @@ function UserDetailPage() {
           <thead>
             <tr className="bg-zinc-700 text-left">
               <th className="py-2 px-4">Nombre</th>
-              <th className="py-2 px-4">Original</th>
+              {/* <th className="py-2 px-4">Original</th> */}
               <th className="py-2 px-4">UTM</th>
-              <th className="py-2 px-4">Código</th>
+              <th className="py-2 px-4">Visitas</th>
+              <th className="py-2 px-4">Leads</th>
+              <th className="py-2 px-4">Comisión</th>
+              <th className="py-2 px-4">Total</th>
+              {/* <th className="py-2 px-4">Código</th> */}
+              
             </tr>
           </thead>
           <tbody>
             {affiliate_links.map((link) => (
               <tr key={link._id} className="border-t border-zinc-700">
                 <td className="py-2 px-4">{link.nombre_enlace}</td>
-                <td className="py-2 px-4">
+                {/* <td className="py-2 px-4">
                   <a href={link.enlace_original} className="text-blue-400 underline" target="_blank" rel="noopener noreferrer">
                     Original
                   </a>
-                </td>
+                </td> */}
                 <td className="py-2 px-4">
                   <a href={link.enlace_utm} className="text-blue-400 underline" target="_blank" rel="noopener noreferrer">
                     UTM
                   </a>
                 </td>
-                <td className="py-2 px-4">{link.codigo_descuento}</td>
+                {/* <td className="py-2 px-4">{link.codigo_descuento}</td> */}
+                <td className="py-2 px-4">x</td>
+                <td className="py-2 px-4">x</td>
+                <td className="py-2 px-4">x</td>
+                <td className="py-2 px-4">x</td>
               </tr>
             ))}
           </tbody>

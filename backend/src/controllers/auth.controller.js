@@ -18,9 +18,7 @@ export const verifyToken = async (req, res) => {
       id: userFound._id,
       username: userFound.username,
       email: userFound.email,
-      id: userFound._id,
-      username: userFound.username,
-      email: userFound.email,
+      id_afiliado: userFound.id_afiliado,
       dni: userFound.dni,
       cuenta_bancaria: userFound.cuenta_bancaria,
       identidad: userFound.identidad,
@@ -31,7 +29,6 @@ export const verifyToken = async (req, res) => {
   });
 };
 
-
 export const register = async (req, res) => {
   const { email, password, username } = req.body;
 
@@ -41,6 +38,7 @@ export const register = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    // Creamos el usuario sin id_afiliado de momento
     const newUser = new User({
       username,
       email,
@@ -48,13 +46,27 @@ export const register = async (req, res) => {
     });
 
     const userSaved = await newUser.save();
-    const token = await createAccessToken({ id: userSaved._id, is_admin: userSaved.is_admin });
+
+    // Generamos el id_afiliado basado en la inicial del username y los últimos 7 caracteres del _id
+    const initial = username.charAt(0).toUpperCase();
+    const idSuffix = userSaved._id.toString().slice(-7);
+    const id_afiliado = `${initial}${idSuffix}`;
+
+    // Actualizamos el usuario con el id_afiliado generado
+    userSaved.id_afiliado = id_afiliado;
+    await userSaved.save();
+
+    const token = await createAccessToken({
+      id: userSaved._id,
+      is_admin: userSaved.is_admin,
+    });
 
     res.cookie("token", token);
     res.json({
       id: userSaved._id,
       username: userSaved.username,
       email: userSaved.email,
+      id_afiliado: userSaved.id_afiliado,
       completado: userSaved.completado,
       createdAt: userSaved.createdAt,
       updatedAt: userSaved.updatedAt,
@@ -65,8 +77,6 @@ export const register = async (req, res) => {
     });
   }
 };
-
-
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -79,13 +89,17 @@ export const login = async (req, res) => {
 
     if (!isMatch) return res.status(400).json(["Invalid password"]);
 
-    const token = await createAccessToken({ id: userFound._id, is_admin: userFound.is_admin });
+    const token = await createAccessToken({
+      id: userFound._id,
+      is_admin: userFound.is_admin,
+    });
     res.cookie("token", token);
 
     res.json({
       id: userFound._id,
       username: userFound.username,
       email: userFound.email,
+      id_afiliado: userFound.id_afiliado,
       dni: userFound.dni,
       cuenta_bancaria: userFound.cuenta_bancaria,
       identidad: userFound.identidad,
@@ -101,15 +115,11 @@ export const login = async (req, res) => {
   }
 };
 
-
-
 export const logout = async (req, res) => {
   res.cookie("token", "", { expires: new Date(0) });
   res.cookie("user", "", { expires: new Date(0) });
   return res.sendStatus(200);
 };
-
-
 
 export const profile = async (req, res) => {
   const userFound = await User.findById(req.user.id);
@@ -124,7 +134,6 @@ export const profile = async (req, res) => {
     updatedAt: userFound.updatedAt,
   });
 };
-
 
 export const updateUser = async (req, res) => {
   const { username, email, password, dni, cuenta_bancaria, identidad } =
@@ -152,6 +161,7 @@ export const updateUser = async (req, res) => {
     id: updatedUser._id,
     username: updatedUser.username,
     email: updatedUser.email,
+    id_afiliado: updatedUser.id_afiliado,
     dni: updatedUser.dni,
     cuenta_bancaria: updatedUser.cuenta_bancaria,
     identidad: updatedUser.identidad,
@@ -160,5 +170,3 @@ export const updateUser = async (req, res) => {
     updatedAt: updatedUser.updatedAt,
   });
 };
-
-

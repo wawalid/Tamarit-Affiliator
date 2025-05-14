@@ -19,7 +19,6 @@ function MyAffiliatesPage() {
       </div>
     );
   }
-  
 
   return (
     <div className="flex flex-col items-center space-y-4 p-4">

@@ -22,7 +22,8 @@ const afiliadoSchema = new mongoose.Schema(
     },
     codigo_descuento: {
       type: String,
-      required: true,
+      required: false,
+      default: null,
     },
     visitas: { type: Number, default: 0 },
     leads: { type: Number, default: 0 },

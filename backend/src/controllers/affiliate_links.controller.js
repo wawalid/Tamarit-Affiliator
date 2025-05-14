@@ -3,9 +3,9 @@ import User from "../models/user.model.js";
 
 export const createAffiliateLink = async (req, res) => {
     try {
-        const { nombre_enlace, enlace_original, enlace_utm, codigo_descuento } = req.body;
+        const { nombre_enlace, enlace_original, enlace_utm, id_afiliado } = req.body; // codigo_descuento
 
-        if (!nombre_enlace || !enlace_original || !enlace_utm || !codigo_descuento) {
+        if (!nombre_enlace || !enlace_original || !enlace_utm) { // || !codigo_descuento
             return res.status(400).json(["Missing required fields"]);
         }
 
@@ -14,7 +14,8 @@ export const createAffiliateLink = async (req, res) => {
             nombre_enlace,
             enlace_original,
             enlace_utm,
-            codigo_descuento,
+            id_afiliado,
+            // codigo_descuento,
         });
     
 

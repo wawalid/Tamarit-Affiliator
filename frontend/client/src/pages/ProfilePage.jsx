@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 function ProfilePage() {
   const location = useLocation();
-  const [mensaje, setMensaje] = useState(null);
+  const [mensaje_error, setMensaje] = useState(null);
 
   const {
     register,
@@ -13,7 +13,7 @@ function ProfilePage() {
     setValue,
     formState: { errors },
   } = useForm();
-  const { user, getUser, updateUser, errors: profileErrors } = useAuth();
+  const { user, updateUser, errors: profileErrors } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,12 +28,12 @@ function ProfilePage() {
   }, [user, setValue]);
 
   useEffect(() => {
-    if (location.state?.message && user?.completado === false) {
+    if (location.state?.message && user.completado !== true) {
       setMensaje(location.state.message);
   
       const timer = setTimeout(() => {
         setMensaje(null);
-      }, 5000);
+      }, 3000);
   
       return () => clearTimeout(timer);
     }
@@ -55,9 +55,9 @@ function ProfilePage() {
 
   return (
     <div>
-      {mensaje && (
+      {mensaje_error && (
         <div className="bg-red-500 text-black p-4 rounded mb-6 text-center">
-          {mensaje}
+          {mensaje_error}
         </div>
       )}
 

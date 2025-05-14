@@ -6,6 +6,7 @@ import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 
 function AffiliateFormPage() {
   const { user } = useAuth();
+  console.log("user en AffiliateFormPage", user);
   const {
     register,
     handleSubmit,
@@ -18,12 +19,11 @@ function AffiliateFormPage() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    const { nombre_campaña, enlace_original, codigo_descuento } = data;
+    const { nombre_campaña, enlace_original } = data;
 
     try {
       const baseUrl = new URL(enlace_original);
-      baseUrl.searchParams.set("utm_medium", "walid_pruebas");
-      baseUrl.searchParams.set("utm_username", user.username);
+      baseUrl.searchParams.set("id_afiliado", user.id_afiliado);
       baseUrl.searchParams.set("utm_source", "Tamarit_Affiliator");
       baseUrl.searchParams.set("utm_campaign", nombre_campaña);
 
@@ -33,7 +33,7 @@ function AffiliateFormPage() {
         nombre_enlace: nombre_campaña,
         enlace_original: enlace_original,
         enlace_utm,
-        codigo_descuento,
+        id_afiliado: user.id_afiliado,
       };
 
       const success = await createAffiliateLink(affiliateLink);
@@ -73,6 +73,15 @@ function AffiliateFormPage() {
         <h1 className="text-xl font-bold mb-4 text-center">
           Generar Enlace de afiliado
         </h1>
+
+        {user?.id_afiliado && (
+          <div className="bg-green-700 text-white text-sm py-3 rounded-md mb-4 text-center">
+            <p>
+              <strong>Tu código de afiliado:</strong> {user.id_afiliado}
+            </p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <input
             type="text"
@@ -85,13 +94,6 @@ function AffiliateFormPage() {
             type="url"
             {...register("enlace_original", { required: true })}
             placeholder="Enlace original"
-            className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-          />
-
-          <input
-            type="text"
-            {...register("codigo_descuento", { required: true })}
-            placeholder="Código de descuento"
             className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
           />
 
