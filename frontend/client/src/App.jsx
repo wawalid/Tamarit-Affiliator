@@ -18,7 +18,7 @@ import Completado_Route from "./Completado_Route";
 import Navbar from "./components/Navbar";
 import AdminPage from "./pages/AdminPage";
 import UserDetailPage from "./pages/UserDetailPage";
-
+import WaitingVerificationPage from "./pages/WaitingVerificationPage";
 
 function App() {
   return (
@@ -26,20 +26,32 @@ function App() {
       <TaskProvider>
         <AffiliateLinkProvider>
           <BrowserRouter>
-            <main className="container mx-auto p-10 bg-zinc-900 min-h-screen">
+<main className="container mx-auto px-4 py-2 bg-zinc-900 min-h-screen">
+
               <Navbar />
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route
+                  path="/waiting-verification"
+                  element={<WaitingVerificationPage />}
+                />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                {/* proteger las rutas para que los no vericados no accedan */}
                 <Route element={<Auth_ProtectedRoute />}>
-                  <Route path="/tasks" element={<TaskPage />} />
+                  {/* <Route path="/tasks" element={<TaskPage />} />
                   <Route path="/add-task" element={<TaskFormPage />} />
-                  <Route path="/tasks/:id" element={<TaskFormPage />} />
-                            <Route element={<Completado_Route />}>
-                                    <Route path="/create-affiliate-link" element={<AffiliateFormPage />} />
-                                    <Route path="/my-affiliates" element={<MyAffiliatesPage />} />
-                            </Route>
+                  <Route path="/tasks/:id" element={<TaskFormPage />} /> */}
+                  <Route element={<Completado_Route />}>
+                    <Route
+                      path="/create-affiliate-link"
+                      element={<AffiliateFormPage />}
+                    />
+                    <Route
+                      path="/my-affiliates"
+                      element={<MyAffiliatesPage />}
+                    />
+                  </Route>
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route element={<AdminRoute />}>
                     <Route path="/admin_page" element={<AdminPage />} />

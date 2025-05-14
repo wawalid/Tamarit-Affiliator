@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
 function AdminPage() {
-  const { getUsers, users } = useAuth();
+  const { getUsers, users, toggleCompletado, toggleVerificado } = useAuth();
 
   useEffect(() => {
     getUsers();
@@ -12,10 +12,12 @@ function AdminPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-center text-2xl font-bold mb-8 text-white">Administrar usuarios</h1>
+      <h1 className="text-center text-2xl font-bold mb-8 text-white">
+        Administrar usuarios
+      </h1>
       <div className="overflow-x-auto">
         {users.length === 0 ? (
-          <p className="text-white text-center">No users available</p>
+          <p className="text-white text-center">No hay usuarios disponibles</p>
         ) : (
           <table className="min-w-full bg-zinc-800 text-white rounded shadow-lg">
             <thead>
@@ -28,7 +30,10 @@ function AdminPage() {
             </thead>
             <tbody>
               {users.map((user, index) => (
-                <tr key={index} className="border-t border-zinc-700 hover:bg-zinc-600">
+                <tr
+                  key={index}
+                  className="border-t border-zinc-700 hover:bg-zinc-600"
+                >
                   <td className="py-3 px-4">
                     <Link
                       to={`/user/${user._id}`}
@@ -37,11 +42,23 @@ function AdminPage() {
                       {user.username}
                     </Link>
                   </td>
-                  <td className="py-3 px-4">{user.is_verified ? "Sí" : "No"}</td>
+                  <td className="py-3 px-4">
+                    <button
+                      onClick={() => toggleVerificado(user._id)}
+                      className={`px-3 py-1 rounded ${
+                        user.is_verified ? "bg-green-600" : "bg-red-600"
+                      } hover:opacity-80`}
+                    >
+                      {user.is_verified ? "Sí" : "No"}
+                    </button>
+                  </td>
                   <td className="py-3 px-4">{user.completado ? "Sí" : "No"}</td>
                   <td className="py-3 px-4">
                     {user.fecha_registro
-                      ? format(new Date(user.fecha_registro), "dd/MM/yyyy HH:mm")
+                      ? format(
+                          new Date(user.fecha_registro),
+                          "dd/MM/yyyy HH:mm"
+                        )
                       : "Fecha no disponible"}
                   </td>
                 </tr>

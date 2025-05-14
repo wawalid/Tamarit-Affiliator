@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import Cookies from "js-cookie";
 import { registerRequest, loginRequest, verifyTokenRequest, updateUserRequest } from "../api/auth";
-import { getUsersRequest } from "../api/users";
+import { getUsersRequest, updateVerifiedUserRequest } from "../api/users";
 
 
 
@@ -77,6 +77,19 @@ export const AuthProvider = ({ children }) => {
           console.log(error);
         }
       };
+
+
+      const toggleVerificado = async (id) => {
+        try {
+            const res = await updateVerifiedUserRequest(id);
+            console.log(res.data);
+            setUsers((prevUsers) =>
+                prevUsers.map((user) => (user._id === id ? { ...user, is_verified: !user.is_verified } : user))
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
           
 
 
@@ -121,7 +134,7 @@ export const AuthProvider = ({ children }) => {
         checkLogin()
     }, [])
     
-    return <AuthContext.Provider value={{ signup, signin, logout, updateUser,getUsers, loading, user,users, isAuthenticated, errors }}>
+    return <AuthContext.Provider value={{ signup, signin, logout, updateUser, getUsers, toggleVerificado, loading, user,users, isAuthenticated, errors }}>
         {children}
     </AuthContext.Provider>
 
