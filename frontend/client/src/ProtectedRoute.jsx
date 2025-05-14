@@ -5,7 +5,6 @@ import {useEffect} from 'react'
 function Auth_ProtectedRoute() {
 
     const {loading, isAuthenticated, user} = useAuth()
-    console.log("user en el protected route", user)
     if (loading) {
         return <h1>Loading...</h1>
     }

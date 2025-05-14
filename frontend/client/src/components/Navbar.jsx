@@ -17,7 +17,12 @@ function Navbar() {
       <ul className="flex gap-x-5 text-white">
         {isAuthenticated ? (
           <>
-            {/* Mostrar el aviso solo si el usuario no ha completado su perfil */}
+
+            {user && !user.is_verified && (
+              <li>
+                <span className="text-red-500">Usuario no verificado</span>
+              </li>
+            )}
             {user && !user.completado && (
               <li>
                 <span className="text-red-500">Complete su perfil</span>
@@ -39,7 +44,7 @@ function Navbar() {
               </>
             )}
             <li>
-              <Link to={"/profile"}>Profile</Link>
+              <Link to={"/profile"}>Perfil</Link>
             </li>
             <li>
               <Link
