@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect } from "react";
 import Cookies from "js-cookie";
 import { registerRequest, loginRequest, verifyTokenRequest, updateUserRequest } from "../api/auth";
 import { getUsersRequest, updateVerifiedUserRequest } from "../api/users";
+import { matchRequest } from "../api/admin";
 
 
 
@@ -90,6 +91,19 @@ export const AuthProvider = ({ children }) => {
             console.log(error);
         }
     }
+
+
+    
+    const match = async (formData) => {
+    try {
+        const res = await matchRequest(formData);
+        console.log(res.data);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        throw error; // Propagar el error para que el componente pueda manejarlo
+    }
+}
           
 
 
@@ -134,7 +148,7 @@ export const AuthProvider = ({ children }) => {
         checkLogin()
     }, [])
     
-    return <AuthContext.Provider value={{ signup, signin, logout, updateUser, getUsers, toggleVerificado, loading, user,users, isAuthenticated, errors }}>
+    return <AuthContext.Provider value={{ signup, signin, logout, updateUser, getUsers, toggleVerificado, match, loading, user,users, isAuthenticated, errors }}>
         {children}
     </AuthContext.Provider>
 
