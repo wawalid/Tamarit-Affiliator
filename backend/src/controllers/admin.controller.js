@@ -1,7 +1,6 @@
 import Match from "../models/match.model.js";
-import {parseCmsLogs} from "../utils/parseCmsLogs.js";
-import {parseShopifyCSV} from "../utils/parseShopifyCSV.js";
-
+import { parseCmsLogs } from "../utils/parseCmsLogs.js";
+import { parseShopifyCSV } from "../utils/parseShopifyCSV.js";
 
 export const findAndSaveMatches = async (formdata) => {
   const { logs_raw, pedidos_shopify_raw } = formdata;
@@ -16,19 +15,18 @@ export const findAndSaveMatches = async (formdata) => {
   // console.log("logs desde el controller", logs);
   // console.log("pedidos desde el controller",pedidos);
 
-  
   for (const log of logs) {
+    // console.log("log desde el controller", log);
     for (const pedido of pedidos) {
-
       if (log.ip === pedido.ip) {
         // Extraer utm_campaign del enlace_utm
-        let nombre_enlace = '';
+        let nombre_enlace = "";
         if (log.enlace_utm) {
           try {
             const urlObj = new URL(log.enlace_utm);
-            nombre_enlace = urlObj.searchParams.get("utm_campaign") || '';
+            nombre_enlace = urlObj.searchParams.get("utm_campaign") || "";
           } catch (error) {
-            nombre_enlace = '';
+            nombre_enlace = "";
           }
         }
 
@@ -47,7 +45,7 @@ export const findAndSaveMatches = async (formdata) => {
             fecha_log: log.fecha_log,
             fecha_pedido: pedido.fecha_pedido,
             nombre_enlace: nombre_enlace,
-            enlace_utm: log.enlace_utm || '',
+            enlace_utm: log.enlace_utm || "",
             matched: true,
           });
 

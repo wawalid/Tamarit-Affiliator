@@ -23,6 +23,7 @@ export function parseCmsLogs(rawLogText) {
 
     const urlParams = new URLSearchParams(urlPath.split('?')[1]);
     const nombreEnlace = urlParams.get('utm_campaign') || '';
+    
 
     logs.push({
       ip,

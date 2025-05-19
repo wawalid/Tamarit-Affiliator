@@ -15,11 +15,10 @@ export function parseShopifyCSV(csvText) {
     const pedido = {
       order_id: row["Order ID"],
       email: row["Email"] || row["Customer Email"],
-      fecha_pedido: new Date(row["Created At"]),
-      ip: row["Client IP"],
-      amount: parseFloat(row["Amount"]),
+      fecha_pedido: new Date(row["Fecha"]),
+      ip: row["IP"],
+      // amount: parseFloat(row["Amount"]),
       currency: row["Currency"],
-      // Puedes agregar más campos si los necesitas
     };
     
     pedidos.push(pedido);
