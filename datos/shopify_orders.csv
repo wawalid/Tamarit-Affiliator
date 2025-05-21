@@ -1,0 +1,51 @@
+Order ID,Order Name,Created At,First Name,Last Name,Customer Email,Amount,Currency,Client IP,Fulfillment Status
+gid://shopify/Order/6624135479625,#8580,2025-05-02T02:24:13Z,Fabio,Ragone,shdw@hotmail.it,435.69,EUR,5.90.129.44,FULFILLED
+gid://shopify/Order/6624216056137,#8581,2025-05-02T06:12:58Z,Bryan,La Dow,bryanladow@outlook.com,861.13,EUR,73.189.227.207,UNFULFILLED
+gid://shopify/Order/6624238338377,#8582,2025-05-02T06:42:00Z,Tom,Di Maggio,tom@purple-monkey.com,643.2,EUR,2001:7e8:c434:7701:51e3:790c:656d:90fb,UNFULFILLED
+gid://shopify/Order/6624370032969,#8583,2025-05-02T08:48:10Z,Mariano,Ferrer,mariano_ferrer@hotmail.com,822.8,EUR,2a02:9130:80b8:611a:910a:1807:ef79:568,FULFILLED
+gid://shopify/Order/6624654950729,#8584,2025-05-02T11:53:10Z,Dwayne,Byerly,nashvillepeacekeeper@yahoo.com,227.77,EUR,2601:484:8001:4a00:74ed:8685:fcab:aa40,FULFILLED
+gid://shopify/Order/6625138508105,#8585,2025-05-02T15:42:28Z,Simone,Gardella,gardellas80@gmail.com,316.14,EUR,109.118.88.71,UNFULFILLED
+gid://shopify/Order/6625380204873,#8586,2025-05-02T18:21:01Z,Daniel,Löberbauer,,428.08,EUR,2001:4bb8:18a:7e90:1ccc:e1a3:a561:a9cf,FULFILLED
+gid://shopify/Order/6625625604425,#8587,2025-05-02T21:43:07Z,robert,hanson,rob.hanson72@gmail.com,560.63,EUR,168.203.12.188,FULFILLED
+gid://shopify/Order/6626622570825,#8588,2025-05-03T14:25:40Z,Antonio,Gomez .Márquez,correcaminosmotogp@gmail.com,90.5,EUR,88.25.113.171,FULFILLED
+gid://shopify/Order/6627078832457,#8589,2025-05-03T20:03:14Z,Fernamdo,Souto Varela,numero1069@gmail.com,163.6,EUR,84.232.35.86,FULFILLED
+gid://shopify/Order/6627493511497,#8590,2025-05-04T07:14:49Z,Thomas,Deubel,th.deubel@gmail.com,347.14,EUR,2003:d9:d74b:a300:6216:4eb8:23b5:5d02,FULFILLED
+gid://shopify/Order/6627674587465,#8591,2025-05-04T09:33:43Z,Michel,Sinno,michel.sinno@laposte.net,426.55,EUR,2a01:cb08:9890:a600:90c3:83b5:2fe5:bcc1,FULFILLED
+gid://shopify/Order/6628083499337,#8592,2025-05-04T14:03:33Z,Sergio,paulin,sergio.paulin.gutierrez@gmail.com,472.25,EUR,84.197.188.5,FULFILLED
+gid://shopify/Order/6628268081481,#8593,2025-05-04T15:50:16Z,Pierre,Faverieux,pierre.faverieux@orange.fr,261.27,EUR,2a01:cb14:1797:5a00:f9f8:2890:9b25:8b69,FULFILLED
+gid://shopify/Order/6629261836617,#8594,2025-05-05T08:50:35Z,Omar,Almerich,omar.almerich@gmail.com,193.6,EUR,83.45.228.207,FULFILLED
+gid://shopify/Order/6629805195593,#8595,2025-05-05T15:00:53Z,CHOW,JIAHAO,lp13810770542@gmail.com,560.0,EUR,101.44.80.135,UNFULFILLED
+gid://shopify/Order/6629806833993,#8596,2025-05-05T15:01:52Z,Johannes,Kern,j.kern84@outlook.de,204.66,EUR,62.224.4.250,FULFILLED
+gid://shopify/Order/6630837125449,#8597,2025-05-06T08:39:48Z,SATAWATCH,KATLIVONG,render.41@gmail.com,1082.38,EUR,2403:6200:8851:45c5:b915:f53c:6309:ec6d,UNFULFILLED
+gid://shopify/Order/6631194460489,#8598,2025-05-06T12:43:21Z,Paula,Ocabo Buil,paulaocabo@gmail.com,79.2,EUR,85.52.243.43,FULFILLED
+gid://shopify/Order/6631273759049,#8599,2025-05-06T13:39:47Z,JEREMY,Hindley,jghindley@mail.com,116.91,EUR,83.100.165.179,FULFILLED
+gid://shopify/Order/6631279919433,#8600,2025-05-06T13:44:25Z,ANGEL,SUAREZ RAMILO,adm@motopasionstore.com,1749.8,EUR,2.136.188.168,UNFULFILLED
+gid://shopify/Order/6631474397513,#8601,2025-05-06T16:02:42Z,Triumph,London,ltc-info@lind.co.uk,328.22,EUR,194.74.217.178,FULFILLED
+gid://shopify/Order/6633009742153,#8602,2025-05-07T14:05:15Z,Tolo,Caldentey Riera,tolocald@gmail.com,105.9,EUR,90.69.192.136,UNFULFILLED
+gid://shopify/Order/6634017685833,#8603,2025-05-08T01:39:21Z,Matthew,Fisher,mtfisher1983@gmail.com,192.36,EUR,2603:6010:44f0:46b0:799d:aea:ec95:9fd7,FULFILLED
+gid://shopify/Order/6634754703689,#8604,2025-05-08T15:21:52Z,Nicolas,Lougarre,,1008.0,EUR,2a02:8428:626c:1101:346e:3761:e134:7e22,PARTIALLY_FULFILLED
+gid://shopify/Order/6635642716489,#8605,2025-05-09T10:58:18Z,Christopher,Grimm,chrisgrimm38@gmail.com,308.07,EUR,170.185.249.123,UNFULFILLED
+gid://shopify/Order/6635816911177,#8606,2025-05-09T13:16:27Z,Tara,Maclachlan,tara@taramaclachlan.co.uk,1337.0,EUR,151.227.133.22,UNFULFILLED
+gid://shopify/Order/6636013158729,#8607,2025-05-09T15:56:42Z,Alexandre,gomez,lamusette@me.com,121.32,EUR,2a01:e0a:9b7:80c0:d8ff:7d13:4553:75cc,FULFILLED
+gid://shopify/Order/6636268749129,#8608,2025-05-09T19:48:00Z,Guillermo,Gómez Atxa,guillergomezatxa@yahoo.es,105.9,EUR,67.218.231.232,FULFILLED
+gid://shopify/Order/6636507201865,#8609,2025-05-10T06:12:40Z,Tolo,Caldentey Riera,tolocald@gmail.com,105.9,EUR,90.69.192.136,UNFULFILLED
+gid://shopify/Order/6636752929097,#8610,2025-05-10T09:59:57Z,Andrew,Webb,a.webb@posteo.de,173.6,EUR,2003:f6:3703:7800:a92d:e9a4:80cb:20cd,FULFILLED
+gid://shopify/Order/6636978635081,#8611,2025-05-10T12:55:29Z,Troy,Pais,troypais@gmail.com,799.02,EUR,2600:4040:a998:4f00:20fd:bdd1:c1b7:5c82,UNFULFILLED
+gid://shopify/Order/6637238813001,#8612,2025-05-10T16:23:57Z,franck,MARTINEZ,martinez.fr@icloud.com,426.55,EUR,2a02:8440:f508:bf2f:fc43:9925:2f05:ab33,FULFILLED
+gid://shopify/Order/6637738295625,#8613,2025-05-11T07:39:51Z,fabio,midolo,FABIOMIDOLO5@GMAIL.COM,123.66,EUR,109.115.3.224,FULFILLED
+gid://shopify/Order/6638956773705,#8614,2025-05-11T20:28:25Z,Sébastien,Guirao,sebletarmo@gmail.com,1553.14,EUR,2a09:bac2:3258:26aa::3da:3f,UNFULFILLED
+gid://shopify/Order/6639408447817,#8615,2025-05-12T03:52:10Z,Ronald,Blood,Ron.Blood@gmail.com,589.42,EUR,71.196.180.108,UNFULFILLED
+gid://shopify/Order/6640396009801,#8616,2025-05-12T19:27:59Z,Antonio,Vella,antvell1@gmail.com,347.14,EUR,2.34.46.90,UNFULFILLED
+gid://shopify/Order/6640890184009,#8617,2025-05-13T09:41:33Z,Mattia,Pagnoncelli,mattia.pagnoncelli@yahoo.it,400.0,EUR,51.179.97.71,FULFILLED
+gid://shopify/Order/6640945267017,#8618,2025-05-13T10:30:01Z,Alberto,,alombo@villaresdeorbigo.net,1281.5,EUR,2a02:9130:94a6:3f90:c94f:997f:d296:d6cd,UNFULFILLED
+gid://shopify/Order/6641133814089,#8619,2025-05-13T13:08:45Z,Michel,Sinno,michel.sinno@laposte.net,345.61,EUR,2a01:cb08:9890:a600:4c49:9d83:8805:e12b,UNFULFILLED
+gid://shopify/Order/6641968578889,#8620,2025-05-14T07:48:19Z,Marco,Wiechel,marco.wiechel@moto91.ch,895.57,EUR,2a02:1210:263d:9500:3b30:3054:364a:3e3,UNFULFILLED
+gid://shopify/Order/6642197266761,#8621,2025-05-14T11:04:15Z,Jamie,Gray,jaygray86@hotmail.com,645.42,EUR,2a00:23c8:5982:7001:2b22:14c3:aaf7:9183,UNFULFILLED
+gid://shopify/Order/6642969280841,#8622,2025-05-14T21:50:12Z,Antoine,Goissen,antoinegoissen@yahoo.fr,121.27,EUR,80.9.108.62,FULFILLED
+gid://shopify/Order/6645465022793,#8623,2025-05-17T06:40:17Z,,Thomas McGill,mcgillmail904@gmail.com,636.38,EUR,2600:1001:b1c7:10b9:a052:8d47:eff3:725,UNFULFILLED
+gid://shopify/Order/6645810987337,#8624,2025-05-17T11:31:37Z,doron,sahar,doron@s-grp.co.il,287.92,EUR,176.231.153.188,UNFULFILLED
+gid://shopify/Order/6647119348041,#8625,2025-05-18T14:02:34Z,Benjamin,Aneckstein,baneckstein@gmail.com,233.63,EUR,24.238.42.54,UNFULFILLED
+gid://shopify/Order/6647624073545,#8626,2025-05-18T20:48:33Z,Hayden,Smith,bowpenguin176@gmail.com,529.88,EUR,2601:19e:427e:b060:a935:b82f:2daf:eee4,UNFULFILLED
+gid://shopify/Order/6647740498249,#8627,2025-05-19T02:13:13Z,Jose Carlos,Garcia Bonilla,carlosbonilla0027@gmail.com,190.5,EUR,88.24.57.194,UNFULFILLED
+gid://shopify/Order/6648072503625,#8628,2025-05-19T10:22:48Z,Mattia,Pagnoncelli,mattia.pagnoncelli@yahoo.it,647.88,EUR,37.163.180.229,UNFULFILLED
+gid://shopify/Order/6649955909961,#8629,2025-05-20T08:06:56Z,M,Escalante Morales,manueladelante@gmail.com,462.8,EUR,31.220.145.223,UNFULFILLED

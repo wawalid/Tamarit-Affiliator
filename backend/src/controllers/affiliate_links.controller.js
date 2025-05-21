@@ -2,29 +2,36 @@ import EnlaceAfiliado from "../models/affiliate_link.model.js";
 import User from "../models/user.model.js";
 
 export const createAffiliateLink = async (req, res) => {
-    try {
-        const { nombre_enlace, enlace_original, enlace_utm, id_afiliado } = req.body; // codigo_descuento
+  try {
+    const { nombre_enlace, enlace_original, enlace_utm, id_afiliado } = req.body;
 
-        if (!nombre_enlace || !enlace_original || !enlace_utm) { // || !codigo_descuento
-            return res.status(400).json(["Missing required fields"]);
-        }
+    if (!nombre_enlace || !enlace_original || !enlace_utm) {
+      return res.status(400).json({ error: "Faltan campos obligatorios." });
+    }
 
-        const newEnlace = new EnlaceAfiliado({
-            user: req.user.id,
-            nombre_enlace,
-            enlace_original,
-            enlace_utm,
-            id_afiliado,
-            // codigo_descuento,
-        });
+    const newEnlace = new EnlaceAfiliado({
+      user: req.user.id,
+      nombre_enlace,
+      enlace_original,
+      enlace_utm,
+      id_afiliado,
+    });
+
+    const savedEnlace = await newEnlace.save();
+    res.status(201).json(savedEnlace);
     
+  } catch (error) {
+    // ⚠️ Duplicado por índice compuesto user + enlace_utm
+    if (error.code === 11000) {
+      return res.status(400).json(["Ya has creado un enlace similar a ese. Usa uno distinto."]);
+    }
 
-        const savedEnlace = await newEnlace.save();
-        res.json(savedEnlace);
-    } catch (error) {
-        return res.status(500).json(error.message);
-    }        
+    // Otros errores
+    console.error(error);
+    return res.status(500).json(["Error al crear el enlace."]);
+  }
 };
+
 
 
 

@@ -17,7 +17,6 @@ const afiliadoSchema = new mongoose.Schema(
     },
     enlace_utm: {
       type: String,
-      unique: true,
       required: true,
     },
     codigo_descuento: {
@@ -35,4 +34,7 @@ const afiliadoSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("enlaces_afiliado", afiliadoSchema);
+
+afiliadoSchema.index({ user: 1, enlace_original: 1 }, { unique: true });
+
+export default mongoose.model("EnlaceAfiliado", afiliadoSchema);

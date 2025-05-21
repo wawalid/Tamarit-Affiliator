@@ -1,13 +1,26 @@
+import { get } from "mongoose";
 import Match from "../models/match.model.js";
 import { parseCmsLogs } from "../utils/parseCmsLogs.js";
 import { parseShopifyCSV } from "../utils/parseShopifyCSV.js";
+import User from "../models/user.model.js";
+import EnlaceAfiliado from "../models/affiliate_link.model.js";
+
+
 
 export const findAndSaveMatches = async (formdata) => {
   const { logs_raw, pedidos_shopify_raw } = formdata;
   if (!logs_raw || !pedidos_shopify_raw) {
     throw new Error("Faltan datos: logs y pedidos son requeridos.");
   }
-  // console.log("Archivos recibidos:", formdata);
+
+  // funcion para obtener los id_afiliado de los usuarios
+  try {
+    const AffliateIDs = await User.find({}, { id_afiliado: 1 }); // devuelve id_afiliado + _id por defecto
+    console.log("IDs de afiliados obtenidos:", users);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(["Error retrieving affiliate IDs"]);
+  }
 
   const logs = await parseCmsLogs(logs_raw);
   const pedidos = await parseShopifyCSV(pedidos_shopify_raw);
@@ -19,7 +32,6 @@ export const findAndSaveMatches = async (formdata) => {
     // console.log("log desde el controller", log);
     for (const pedido of pedidos) {
       if (log.ip === pedido.ip) {
-        // Extraer utm_campaign del enlace_utm
         let nombre_enlace = "";
         if (log.enlace_utm) {
           try {
