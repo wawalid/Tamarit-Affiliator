@@ -1,9 +1,13 @@
-// // import dotenv from "dotenv";
-// // dotenv.config();
+import dotenv from "dotenv";
+dotenv.config();
 
-// export const TOKEN_SECRET = process.env.TOKEN_SECRET
-export const TOKEN_SECRET = "my personal secret key yehaa";
 export const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/merndb";
+export const TOKEN_SECRET = process.env.TOKEN_SECRET || "fallback-secret-key";
 export const PORT = process.env.PORT || 4000;
 
-// console.log(process.env.MONGODB_URI)
+// Mensaje según la URI
+if (MONGODB_URI.includes("mongodb+srv")) {
+  console.log("🌐 Conectando a MongoDB Atlas...");
+} else {
+  console.log("🖥️ Conectando a MongoDB local...");
+}
