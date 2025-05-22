@@ -12,10 +12,24 @@ import adminRoutes from "./routes/admin.routes.js";
 
 const app = express()
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://192.168.0.27:5173",  
+];
+
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true,
+  origin: function(origin, callback) {
+    // permitir solicitudes sin origen (como herramientas tipo Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true,
 }));
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());

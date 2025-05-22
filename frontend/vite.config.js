@@ -2,9 +2,15 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  
+  server: {
+    host: true,         // escucha en todas las interfaces (0.0.0.0)
+    port: 5173,
+    hmr: {
+      host: '192.168.8.27',  // aquí pon la IP local de tu máquina donde corre Vite
+      protocol: 'ws',
+    }
+  }
 })

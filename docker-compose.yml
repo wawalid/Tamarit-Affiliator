@@ -1,36 +1,29 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  mongo:
-    image: mongo:6
-    container_name: mern_mongo
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
   backend:
-    build: ./backend
-    container_name: mern_backend
-    restart: always
+    build:
+      context: ./backend
     ports:
-      - "5000:5000"
-    environment:
-      - MONGO_URI=mongodb://mongo:27017/mern_db
-      - NODE_ENV=production
+      - "4000:4000"
     volumes:
-      - ./datos:/app/datos
-    depends_on:
-      - mongo
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - PORT=4000
+      # Aquí asegúrate de tener la URI de Mongo Atlas en alguna variable o en config
+      # - MONGODB_URI=mongodb+srv://usuario:pass@cluster0.mongodb.net/tu_db?retryWrites=true&w=majority
+    depends_on: []
 
   frontend:
-    build: ./frontend
-    container_name: mern_frontend
+    build:
+      context: ./frontend
     ports:
-      - "80:80"
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - PORT=5173
     depends_on:
       - backend
-
-volumes:
-  mongo_data:
