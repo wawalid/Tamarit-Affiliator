@@ -7,12 +7,10 @@ import { TOKEN_SECRET } from "../config.js";
 
 
 const cookieOptions = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  priority: "high",
-  path: "/",
-  expires: new Date(Date.now() + 15 * 60 * 1000),
+httpOnly: process.env.NODE_ENV === "production",
+// httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 };
 
 
