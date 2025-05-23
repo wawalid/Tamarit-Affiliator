@@ -1,6 +1,6 @@
 import { get } from "mongoose";
 import Match from "../models/match.model.js";
-import { parseCMSLogs } from "../utils/parsecmsLogs.js";
+import { parseCMSLogs } from "../utils/parsecmslogs.js";
 import { parseShopifyCSV } from "../utils/parseShopifyCSV.js";
 import User from "../models/user.model.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
