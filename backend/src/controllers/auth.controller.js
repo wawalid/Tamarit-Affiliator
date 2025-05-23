@@ -7,11 +7,14 @@ import { TOKEN_SECRET } from "../config.js";
 
 
 const cookieOptions = {
-  httpOnly: true,         
-  secure: true,           
-  sameSite: "none",       
-  path: "/",              
+  httpOnly: true,
+  secure: true,
+  sameSite: "strict",
+  priority: "high", // Esta opción puede no ser reconocida por todos los navegadores aún
+  path: "/",
+  expires: new Date(Date.now() + 15 * 60 * 1000), // 15 minutos
 };
+
 
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
