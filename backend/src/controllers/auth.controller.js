@@ -5,12 +5,12 @@ import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
-// Opciones comunes para la cookie
+
 const cookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-  path: "/",
+  httpOnly: true,         
+  secure: true,           
+  sameSite: "none",       
+  path: "/",              
 };
 
 export const verifyToken = async (req, res) => {
