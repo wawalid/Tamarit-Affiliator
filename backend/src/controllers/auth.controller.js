@@ -1,19 +1,28 @@
+// Importaciones
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
+// Opciones comunes para la cookie
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
+};
+
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
-
-  if (!token) return res.sendStatus(401).json({ message: "Unauthorized" });
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
 
   jwt.verify(token, TOKEN_SECRET, async (err, user) => {
-    if (err) return res.sendStatus(401).json({ message: "Unauthorized" });
+    if (err) return res.status(401).json({ message: "Unauthorized" });
 
     const userFound = await User.findById(user.id);
     if (!userFound) return res.status(401).json({ message: "User not found" });
+
     return res.json({
       id: userFound._id,
       username: userFound.username,
@@ -38,31 +47,16 @@ export const register = async (req, res) => {
     if (userFound) return res.status(400).json(["email is already in use"]);
 
     const passwordHash = await bcrypt.hash(password, 10);
-
-    // Creamos el usuario sin id_afiliado de momento
-    const newUser = new User({
-      username,
-      email,
-      password: passwordHash,
-    });
-
+    const newUser = new User({ username, email, password: passwordHash });
     const userSaved = await newUser.save();
 
-    // Generamos el id_afiliado basado en la inicial del username y los últimos 7 caracteres del _id
-    const initial = username.charAt(0).toUpperCase();
-    const idSuffix = userSaved._id.toString().slice(-7);
-    const id_afiliado = `${initial}${idSuffix}`;
-
-    // Actualizamos el usuario con el id_afiliado generado
+    const id_afiliado = `${username.charAt(0).toUpperCase()}${userSaved._id.toString().slice(-7)}`;
     userSaved.id_afiliado = id_afiliado;
     await userSaved.save();
 
-    const token = await createAccessToken({
-      id: userSaved._id,
-      is_admin: userSaved.is_admin,
-    });
+    const token = await createAccessToken({ id: userSaved._id, is_admin: userSaved.is_admin });
+    res.cookie("token", token, cookieOptions);
 
-    res.cookie("token", token);
     res.json({
       id: userSaved._id,
       username: userSaved.username,
@@ -74,9 +68,7 @@ export const register = async (req, res) => {
       updatedAt: userSaved.updatedAt,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -88,14 +80,10 @@ export const login = async (req, res) => {
     if (!userFound) return res.status(400).json(["User not found"]);
 
     const isMatch = await bcrypt.compare(password, userFound.password);
-
     if (!isMatch) return res.status(400).json(["Invalid password"]);
 
-    const token = await createAccessToken({
-      id: userFound._id,
-      is_admin: userFound.is_admin,
-    });
-    res.cookie("token", token);
+    const token = await createAccessToken({ id: userFound._id, is_admin: userFound.is_admin });
+    res.cookie("token", token, cookieOptions);
 
     res.json({
       id: userFound._id,
@@ -112,21 +100,20 @@ export const login = async (req, res) => {
       updatedAt: userFound.updatedAt,
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const logout = async (req, res) => {
-  res.cookie("token", "", { expires: new Date(0) });
-  res.cookie("user", "", { expires: new Date(0) });
+  res.clearCookie("token", {
+    ...cookieOptions,
+    expires: new Date(0),
+  });
   return res.sendStatus(200);
 };
 
 export const profile = async (req, res) => {
   const userFound = await User.findById(req.user.id);
-
   if (!userFound) return res.status(400).json({ message: "User not found" });
 
   return res.json({
@@ -139,25 +126,18 @@ export const profile = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { username, email, password, dni, cuenta_bancaria, identidad } =
-    req.body;
+  const { username, email, password, dni, cuenta_bancaria, identidad } = req.body;
   const userFound = await User.findById(req.user.id);
-
   if (!userFound) return res.status(400).json({ message: "User not found" });
 
   if (username) userFound.username = username;
   if (email) userFound.email = email;
   if (password) userFound.password = await bcrypt.hash(password, 10);
   if (dni !== undefined) userFound.dni = dni;
-  if (cuenta_bancaria !== undefined)
-    userFound.cuenta_bancaria = cuenta_bancaria;
+  if (cuenta_bancaria !== undefined) userFound.cuenta_bancaria = cuenta_bancaria;
   if (identidad !== undefined) userFound.identidad = identidad;
 
-  const completado = Boolean(
-    userFound.dni && userFound.cuenta_bancaria && userFound.identidad
-  );
-  userFound.completado = completado;
-
+  userFound.completado = Boolean(userFound.dni && userFound.cuenta_bancaria && userFound.identidad);
   const updatedUser = await userFound.save();
 
   return res.json({
