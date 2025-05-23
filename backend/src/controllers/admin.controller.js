@@ -1,6 +1,6 @@
 import { get } from "mongoose";
 import Match from "../models/match.model.js";
-import { parseCmsLogs } from "../utils/parseCmsLogs.js";
+import { parseCMSLogs } from "../utils/parsecmsLogs.js";
 import { parseShopifyCSV } from "../utils/parseShopifyCSV.js";
 import User from "../models/user.model.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
@@ -22,7 +22,7 @@ export const findAndSaveMatches = async (formdata) => {
     return res.status(500).json(["Error retrieving affiliate IDs"]);
   }
 
-  const logs = await parseCmsLogs(logs_raw);
+  const logs = await parseCMSLogs(logs_raw);
   const pedidos = await parseShopifyCSV(pedidos_shopify_raw);
   const savedMatches = [];
   // console.log("logs desde el controller", logs);

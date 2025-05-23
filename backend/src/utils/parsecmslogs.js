@@ -1,6 +1,6 @@
 import { parse } from "date-fns";
 
-export function parseCmsLogs(rawLogText) {
+export function parseCMSLogs(rawLogText) {
   const lines = rawLogText.split('\n').filter(line => line.trim() !== '');
   const logs = [];
 
