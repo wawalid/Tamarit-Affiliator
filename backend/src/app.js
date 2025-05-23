@@ -10,21 +10,22 @@ import accessoryRoutes from "./routes/accessory.routes.js";
 import usersRoutes from "./routes/users.routes.js"
 import adminRoutes from "./routes/admin.routes.js";
 
-const app = express()
+const app = express();
 
+// 👇 Añade aquí tu dominio de frontend en producción
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://192.168.0.27:5173",  
+  "http://192.168.0.27:5173",
+  "https://front-production-aa1f.up.railway.app" // <-- ¡este es el que faltaba!
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // permitir solicitudes sin origen (como herramientas tipo Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
+    if (!origin) return callback(null, true); // permite herramientas como Postman
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     } else {
-      callback(new Error('No permitido por CORS'));
+      return callback(new Error("No permitido por CORS: " + origin));
     }
   },
   credentials: true,
@@ -41,6 +42,4 @@ app.use("/api", accessoryRoutes);
 app.use("/api", usersRoutes);
 app.use("/api", adminRoutes);
 
-
 export default app;
-
