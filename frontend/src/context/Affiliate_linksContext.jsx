@@ -1,24 +1,29 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getAffiliateLinksRequest, getAffiliateLinkbyIDRequest, createAffiliateLinkRequest, deleteAffiliateLinkRequest } from "../api/affiliate_links";
+import {
+  getAffiliateLinksRequest,
+  getAffiliateLinkbyIDRequest,
+  createAffiliateLinkRequest,
+  deleteAffiliateLinkRequest,
+} from "../api/affiliate_links";
 
 export const Affiliate_linkContext = createContext();
 
 export const useAffiliateLinks = () => {
   const context = useContext(Affiliate_linkContext);
   if (!context) {
-    throw new Error("useAffiliateLinks must be used within an AffiliateLinkProvider");
+    throw new Error(
+      "useAffiliateLinks must be used within an AffiliateLinkProvider"
+    );
   }
   return context;
 };
-
-
 
 export const AffiliateLinkProvider = ({ children }) => {
   const [affiliate_links, setAffiliateLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState([]);
+  const [successes, setSuccesses] = useState([]);
 
-  
   const getAffiliateLinkbyId = async (id) => {
     try {
       const res = await getAffiliateLinkbyIDRequest(id);
@@ -29,7 +34,7 @@ export const AffiliateLinkProvider = ({ children }) => {
       console.log(error.response);
       setErrors(error.response.data);
     }
-  }
+  };
 
   const getAffiliateLinks = async () => {
     try {
@@ -47,12 +52,12 @@ export const AffiliateLinkProvider = ({ children }) => {
     try {
       const res = await createAffiliateLinkRequest(affiliate_link);
       console.log("Affiliate link created successfully");
-      setErrors(["Enlace creado correctamente"]);
-      return true
+      setSuccesses(["Enlace creado correctamente"]);
+      return true;
     } catch (error) {
       console.log(error.response.data);
       setErrors(error.response.data);
-      return false
+      return false;
     }
   };
 
@@ -72,13 +77,16 @@ export const AffiliateLinkProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    let timer;
+
     if (errors.length > 0) {
-      const timer = setTimeout(() => {
-        setErrors([]);
-      }, 5000);
-      return () => clearTimeout(timer);
+      timer = setTimeout(() => setErrors([]), 5000);
+    } else if (successes.length > 0) {
+      timer = setTimeout(() => setSuccesses([]), 5000);
     }
-  }, [errors]);
+
+    return () => clearTimeout(timer);
+  }, [errors, successes]);
 
   return (
     <Affiliate_linkContext.Provider
@@ -90,6 +98,7 @@ export const AffiliateLinkProvider = ({ children }) => {
         deleteAffiliateLink,
         loading,
         errors,
+        successes,
       }}
     >
       {children}

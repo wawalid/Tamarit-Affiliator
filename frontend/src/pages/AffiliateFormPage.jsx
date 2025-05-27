@@ -10,13 +10,18 @@ function AffiliateFormPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }, 
+    formState: { Successes },
   } = useForm();
 
   const [utmLink, setUtmLink] = useState("");
-  const { createAffiliateLink, errors: affiliate_linkErrors } =
-    useAffiliateLinks();
-  const navigate = useNavigate();
+  const {
+  createAffiliateLink,
+  errors: affiliate_linkErrors,
+  successes: affiliate_linkSuccesses,
+} = useAffiliateLinks();
+
+
 
   const onSubmit = async (data) => {
     const { nombre_campaña, enlace_original } = data;
@@ -67,6 +72,11 @@ function AffiliateFormPage() {
         {affiliate_linkErrors.map((error, i) => (
           <div className="bg-red-500 p-2 text-white my-2" key={i}>
             {error}
+          </div>
+        ))}
+        {affiliate_linkSuccesses.map((success, i) => (
+          <div className="bg-green-500 p-2 text-white my-2" key={i}>
+            {success}
           </div>
         ))}
 
