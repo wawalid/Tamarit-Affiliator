@@ -15,15 +15,17 @@ export function parseCMSLogs(rawLogText) {
     const fechaStr = match[2]; // ej: 07/May/2025:08:49:58 +0200
     const urlPath = match[3];
 
-    // Usamos date-fns para parsear la fecha correctamente
-    const fechaLog = parse(fechaStr, "dd/MMM/yyyy:HH:mm:ss X", new Date());
+    // Si no tiene parámetros UTM, lo ignoramos
+    if (!urlPath.includes("utm_campaign") || !urlPath.includes("utm_source") || !urlPath.includes("id_afiliado")) {
+      continue;
+    }
 
+    const fechaLog = parse(fechaStr, "dd/MMM/yyyy:HH:mm:ss X", new Date());
     const baseUrl = 'https://tamaritmotorcycles.com';
     const enlaceUtm = baseUrl + urlPath;
 
     const urlParams = new URLSearchParams(urlPath.split('?')[1]);
     const nombreEnlace = urlParams.get('utm_campaign') || '';
-    
 
     logs.push({
       ip,
@@ -33,6 +35,5 @@ export function parseCMSLogs(rawLogText) {
     });
   }
 
-  // console.log("Logs parseados:", logs);
   return logs;
 }

@@ -9,7 +9,7 @@ router.post(
   "/match",
   upload.fields([
     { name: "cms_log", maxCount: 1 },
-    { name: "shopify_data", maxCount: 1 },
+    { name: "contact_csv", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
@@ -17,9 +17,9 @@ router.post(
       console.log("Archivos recibidos:", Object.keys(req.files || {}));
 
       const logsFile = req.files?.cms_log?.[0];
-      const pedidosFile = req.files?.shopify_data?.[0];
+      const contactosFile = req.files?.contact_csv?.[0];
 
-      if (!logsFile || !pedidosFile) {
+      if (!logsFile || !contactosFile) {
         console.warn("⚠️ Archivos faltantes");
         return res
           .status(400)
@@ -28,10 +28,10 @@ router.post(
 
       console.log("✔️ Ambos archivos presentes");
       console.log("Nombre del archivo de logs:", logsFile.originalname);
-      console.log("Nombre del archivo de pedidos:", pedidosFile.originalname);
+      console.log("Nombre del archivo de contactos:", contactosFile.originalname);
 
-      const logsText = logsFile.buffer.toString("utf-8");
-      const pedidosCsv = pedidosFile.buffer.toString("utf-8");
+      const logsTxt_raw = logsFile.buffer.toString("utf-8");
+      const contactoTxt_raw = contactosFile.buffer.toString("utf-8");
 
       console.log("📄 Archivos convertidos a texto");
       // console.log(logsText)
@@ -39,8 +39,8 @@ router.post(
 
       // CORREGIDO: Enviar como un único objeto
       const matches = await findAndSaveMatches({
-        logs_raw: logsText,
-        pedidos_shopify_raw: pedidosCsv,
+        logs_raw: logsTxt_raw,
+        contactos_raw: contactoTxt_raw,
       });
 
       console.log(`✅ ${matches.length} coincidencias encontradas y guardadas`);

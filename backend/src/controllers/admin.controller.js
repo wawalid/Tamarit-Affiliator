@@ -1,31 +1,30 @@
 import { get } from "mongoose";
 import Match from "../models/match.model.js";
 import { parseCMSLogs } from "../utils/parsecmslogs.js";
-import { parseShopifyCSV } from "../utils/parseShopifyCSV.js";
+import { parseContactCSV } from "../utils/parseContactCSV.js";
 import User from "../models/user.model.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
 
 
 
 export const findAndSaveMatches = async (formdata) => {
-  const { logs_raw, pedidos_shopify_raw } = formdata;
-  if (!logs_raw || !pedidos_shopify_raw) {
+  const { logs_raw, contactos_raw } = formdata;
+  if (!logs_raw || !contactos_raw) {
     throw new Error("Faltan datos: logs y pedidos son requeridos.");
   }
 
-  // funcion para obtener los id_afiliado de los usuarios
   try {
     const AffliateIDs = await User.find({}, { id_afiliado: 1 }); // devuelve id_afiliado + _id por defecto
-    console.log("IDs de afiliados obtenidos:", users);
+    // console.log("IDs de afiliados obtenidos:", AffliateIDs);
   } catch (error) {
     console.error(error);
     return res.status(500).json(["Error retrieving affiliate IDs"]);
   }
 
   const logs = await parseCMSLogs(logs_raw);
-  const pedidos = await parseShopifyCSV(pedidos_shopify_raw);
+  const pedidos = await parseContactCSV(contactos_raw);
   const savedMatches = [];
-  // console.log("logs desde el controller", logs);
+  console.log("logs desde el controller", logs);
   // console.log("pedidos desde el controller",pedidos);
 
   for (const log of logs) {

@@ -15,6 +15,7 @@ const app = express();
 // 👇 Añade aquí tu dominio de frontend en producción
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://192.168.8.27:5173",
   "https://front-production-aa1f.up.railway.app" // <-- ¡este es el que faltaba!
 ];
 

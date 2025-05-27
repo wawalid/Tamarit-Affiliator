@@ -6,21 +6,21 @@ import { Link } from "react-router-dom";
 function AdminPage() {
   const { getUsers, users, toggleCompletado, toggleVerificado, match } = useAuth();
   const [cmsLogFile, setCmsLogFile] = useState(null);
-  const [shopifyFile, setShopifyFile] = useState(null);
+  const [contactFyle, setContactFyle] = useState(null);
 
   useEffect(() => {
     getUsers();
   }, []);
 
   const handleFileUpload = async () => {
-    if (!cmsLogFile || !shopifyFile) {
+    if (!cmsLogFile || !contactFyle) {
       alert("Por favor, selecciona ambos archivos.");
       return;
     }
 
     const formData = new FormData();
     formData.append("cms_log", cmsLogFile);
-    formData.append("shopify_data", shopifyFile);
+    formData.append("contact_csv", contactFyle);
 
     try {
       await match(formData);
@@ -94,11 +94,11 @@ function AdminPage() {
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-1">Shopify pedidos (CSV):</label>
+          <label className="block mb-1">Contactos (CSV):</label>
           <input
             type="file"
             accept=".csv"
-            onChange={(e) => setShopifyFile(e.target.files[0])}
+            onChange={(e) => setContactFyle(e.target.files[0])}
             className="block w-full text-sm text-white"
           />
         </div>
