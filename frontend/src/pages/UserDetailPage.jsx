@@ -54,7 +54,9 @@ function UserDetailPage() {
                   </a>
                 </td>
                 {/* <td className="py-2 px-4">{link.codigo_descuento}</td> */}
-                <td className="py-2 px-4">x</td>
+                <td className="py-2 px-4">
+                  {link.visitas}
+                </td>
                 <td className="py-2 px-4">x</td>
                 <td className="py-2 px-4">x</td>
                 <td className="py-2 px-4">x</td>

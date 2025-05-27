@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+const visitaSchema = new mongoose.Schema({
+  ip: { type: String, required: true },
+  timestamp: { type: Date, required: true },
+});
+
 const afiliadoSchema = new mongoose.Schema(
   {
     user: {
@@ -28,12 +33,15 @@ const afiliadoSchema = new mongoose.Schema(
     leads: { type: Number, default: 0 },
     ventas: { type: Number, default: 0 },
     comision: { type: Number, default: 0 },
+    ultima_visita: { type: Date, default: null },
+
+    // Aquí guardamos la lista de visitas con IP y timestamp
+    registro_visitas: { type: [visitaSchema], default: [] },
   },
   {
     timestamps: true,
   }
 );
-
 
 afiliadoSchema.index({ user: 1, enlace_original: 1 }, { unique: true });
 
