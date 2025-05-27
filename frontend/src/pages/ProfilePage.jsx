@@ -13,8 +13,8 @@ function ProfilePage() {
     setValue,
     formState: { errors },
   } = useForm();
-  const { user, updateUser, errors: profileErrors } = useAuth();
-  const navigate = useNavigate();
+  const { user, updateUser, errors: profileErrors, successes: profileSuccess} = useAuth();
+
 
   useEffect(() => {
     if (user) {
@@ -30,19 +30,19 @@ function ProfilePage() {
   useEffect(() => {
     if (location.state?.message && user.completado !== true) {
       setMensaje(location.state.message);
-  
+
       const timer = setTimeout(() => {
         setMensaje(null);
       }, 3000);
-  
+
       return () => clearTimeout(timer);
     }
   }, [location.state, user]);
-  
+
 
   const onSubmit = async (data) => {
     if (!data.password) {
-      data.password = user.password; 
+      data.password = user.password;
     }
 
     try {
@@ -62,11 +62,19 @@ function ProfilePage() {
       )}
 
       <div className="aside">
-        <div className="flex flex-col items-center justify-center bg-zinc-900 text-white">
-          <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md">
+        <div className="flex flex-col items-center justify-center bg-zinc-900 text-white space-y-4 p-4">
+          <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md m-2">
+            <h2 className="text-2xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 animate-pulse">
+              ¡Bienvenido, {user.username}!
+            </h2>
             {profileErrors.map((error, i) => (
               <div className="bg-red-500 p-2 text-white my-2" key={i}>
                 {error}
+              </div>
+            ))}
+            {profileSuccess.map((success, i) => (
+              <div className="bg-green-500 p-2 text-white my-2" key={i}>
+                {success}
               </div>
             ))}
             <form onSubmit={handleSubmit(onSubmit)}>

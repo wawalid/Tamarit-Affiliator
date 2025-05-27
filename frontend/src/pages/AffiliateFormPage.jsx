@@ -51,8 +51,8 @@ function AffiliateFormPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-zinc-900 text-white min-h-screen">
-      <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md">
+    <div className="flex flex-col items-center justify-center bg-zinc-900 text-white space-y-4 p-4">
+      <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md m-2">
         {errors.nombre_campaña && (
           <div className="bg-red-500 p-2 text-white my-2">
             El nombre de campaña es obligatorio.

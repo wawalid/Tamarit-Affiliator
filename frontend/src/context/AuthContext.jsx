@@ -22,9 +22,10 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
+  const [errors, setErrors] = useState([]);
+  const [successes, setSuccesses] = useState([]);
 
   const signup = async (user) => {
     try {
@@ -61,6 +62,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await updateUserRequest(user);
       setUser(res.data);
+      setSuccesses(["Usuario actualizado correctamente"]);
       console.log("datos del usuario al actualizar", res.data);
     } catch (error) {
       console.log(error.response);
@@ -104,7 +106,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Use effects
+  // Borrar los mensajes de error y éxito después de 5 segundos
   useEffect(() => {
     if (errors.length > 0) {
       const timer = setTimeout(() => {
@@ -113,6 +115,16 @@ export const AuthProvider = ({ children }) => {
       return () => clearTimeout(timer);
     }
   }, [errors]);
+
+  useEffect(() => {
+    if (successes.length > 0) {
+      const timer = setTimeout(() => {
+        setSuccesses([]);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [successes]);
+
 
   useEffect(() => {
     async function checkLogin() {
@@ -152,6 +164,7 @@ export const AuthProvider = ({ children }) => {
         users,
         isAuthenticated,
         errors,
+        successes
       }}
     >
       {children}
