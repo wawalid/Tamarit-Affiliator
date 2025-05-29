@@ -6,7 +6,7 @@ import {
   verifyTokenRequest,
   updateUserRequest,
 } from "../api/auth";
-import { getUsersRequest, updateVerifiedUserRequest } from "../api/users";
+import { getUsersRequest,getUserByIdRequest, updateVerifiedUserRequest } from "../api/users";
 import { matchRequest } from "../api/admin";
 
 export const AuthContext = createContext();
@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
+  const [affiliateUser, setAffiliateUser] = useState(null);
   const [errors, setErrors] = useState([]);
   const [successes, setSuccesses] = useState([]);
 
@@ -78,6 +79,18 @@ export const AuthProvider = ({ children }) => {
       setUsers(res.data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getUserbyID = async (id) => {
+    try {
+      const res = await getUserByIdRequest(id);
+      console.log(res.data);
+      console.log("datos del usuario al obtener por ID", res.data);
+      setAffiliateUser(res.data);
+    } catch (error) {
+      console.log(error);
+      throw error; // Propagar el error para que el componente pueda manejarlo
     }
   };
 
@@ -157,10 +170,12 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateUser,
         getUsers,
+        getUserbyID,
         toggleVerificado,
         match,
         loading,
         user,
+        affiliateUser,
         users,
         isAuthenticated,
         errors,

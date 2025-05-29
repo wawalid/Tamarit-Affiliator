@@ -7,7 +7,7 @@ const MatchSchema = new mongoose.Schema(
     amount: Number,
     order_id: String,
     fecha_log: Date,
-    fecha_pedido: Date,
+    fecha_contacto: Date,
     nombre_enlace: String,
     enlace_utm: String,
     matched: { type: Boolean, default: true }

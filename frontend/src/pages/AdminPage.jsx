@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
 function AdminPage() {
-  const { getUsers, users, toggleCompletado, toggleVerificado, match } = useAuth();
+  const { getUsers, users, toggleCompletado, toggleVerificado, match } = useAuth(); 
   const [cmsLogFile, setCmsLogFile] = useState(null);
   const [contactFyle, setContactFyle] = useState(null);
 
@@ -55,7 +55,7 @@ function AdminPage() {
                   <tr key={index} className="border-t border-zinc-700 hover:bg-zinc-600">
                     <td className="py-3 px-4">
                       <Link to={`/user/${user._id}`} className="text-blue-400 hover:underline">
-                        {user.username}
+                        {user.fullname}
                       </Link>
                     </td>
                     <td className="py-3 px-4">

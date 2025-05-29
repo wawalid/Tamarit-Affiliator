@@ -9,6 +9,22 @@ export const getUsers = async (req, res) => {
   }
 };
 
+export const getUserbyID = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(id, {is_admin: false, password: false});
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log("User found:", user);
+    res.json(user);
+  } catch (error) {
+    return res.status(500).json({ message: "Error retrieving user" });
+  }
+}
+
+
 
 export const updateActiveUser = async (req, res) => {
   const { id } = req.params;

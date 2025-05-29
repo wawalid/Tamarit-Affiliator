@@ -4,6 +4,11 @@ const visitaSchema = new mongoose.Schema({
   ip: { type: String, required: true },
   timestamp: { type: Date, required: true },
 });
+const leadschema = new mongoose.Schema({
+  contacto: { type: String, required: true }
+});
+
+
 
 const afiliadoSchema = new mongoose.Schema(
   {
@@ -35,8 +40,9 @@ const afiliadoSchema = new mongoose.Schema(
     comision: { type: Number, default: 0 },
     ultima_visita: { type: Date, default: null },
 
-    // Aquí guardamos la lista de visitas con IP y timestamp
     registro_visitas: { type: [visitaSchema], default: [] },
+    registro_leads: { type: [leadschema], default: [] },
+    
   },
   {
     timestamps: true,

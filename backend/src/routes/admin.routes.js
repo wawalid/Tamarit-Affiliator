@@ -43,12 +43,8 @@ router.post(
         contactos_raw: contactoTxt_raw,
       });
 
-      console.log(`✅ ${matches.length} coincidencias encontradas y guardadas`);
+      // console.log(`✅ ${matches.length} coincidencias encontradas y guardadas`);
 
-      res.status(200).json({
-        message: `${matches.length} coincidencias guardadas correctamente.`,
-        data: matches,
-      });
     } catch (error) {
       console.error("❌ Error en /api/admin/match:", error);
       res.status(500).json({ error: "Error procesando los archivos." });

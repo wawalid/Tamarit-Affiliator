@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    username: { type: String, required: true, trim: true },
+    fullname: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     id_afiliado: { type: String, default: null },
-    // enlace1: { type: String, required: true },
-    // enlace2: { type: String, default: null },
-    // enlace3: { type: String, default: null },
+    rrss_1: { type: String, required: true },
+    rrss_2: { type: String, default: null },
+    rrss_3: { type: String, default: null },
     is_admin: { type: Boolean, default: false },
     is_verified: { type: Boolean, default: false },
     // is_banned: { type: Boolean, default: false },

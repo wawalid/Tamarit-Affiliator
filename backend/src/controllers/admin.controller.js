@@ -1,112 +1,87 @@
-import { get } from "mongoose";
-import Match from "../models/match.model.js";
 import { parseCMSLogs } from "../utils/parsecmslogs.js";
 import { parseContactCSV } from "../utils/parseContactCSV.js";
-import User from "../models/user.model.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
 
 export const findAndSaveMatches = async (formdata) => {
   const { logs_raw, contactos_raw } = formdata;
   if (!logs_raw || !contactos_raw) {
-    throw new Error("Faltan datos: logs y pedidos son requeridos.");
-  }
-
-  try {
-    const AffliateIDs = await User.find({}, { id_afiliado: 1 });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json(["Error retrieving affiliate IDs"]);
+    throw new Error("Faltan datos: logs y contactos son requeridos.");
   }
 
   const logs = await parseCMSLogs(logs_raw);
-  const pedidos = await parseContactCSV(contactos_raw);
-  const savedMatches = [];
+  const contactos_csv = await parseContactCSV(contactos_raw);
 
+  // Ordena los logs por fecha
+  logs.sort((a, b) => new Date(a.fecha_log) - new Date(b.fecha_log));
+
+  // Agrupa los logs por IP
+  const logsPorIP = {};
   for (const log of logs) {
-    console.log("log desde el controller", log);
-
-    for (const pedido of pedidos) {
-      if (log.ip === pedido.ip) {
-        let nombre_enlace = "";
-        if (log.enlace_utm) {
-          try {
-            const urlObj = new URL(log.enlace_utm);
-            nombre_enlace = urlObj.searchParams.get("utm_campaign") || "";
-          } catch (error) {
-            nombre_enlace = "";
-          }
-        }
-
-        // Comprobar si ya existe un match con esa IP y ese pedido
-        const existingMatch = await Match.findOne({
-          ip: log.ip,
-          order_id: pedido.order_id,
-        });
-
-        if (!existingMatch) {
-          const match = new Match({
-            ip: log.ip,
-            email: pedido.email,
-            amount: pedido.amount,
-            order_id: pedido.order_id,
-            fecha_log: log.fecha_log,
-            fecha_pedido: pedido.fecha_pedido,
-            nombre_enlace: nombre_enlace,
-            enlace_utm: log.enlace_utm || "",
-            matched: true,
-          });
-
-          const saved = await match.save();
-          savedMatches.push(saved);
-        }
-      }
-    }
-
-    // === Aquí actualizamos visitas por enlace ===
-
-    if (!log.enlace_utm) continue; // si no hay enlace, saltar
-
-    const enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
-    if (!enlace) continue; // no existe enlace en BD
-
-    const logDate = new Date(log.fecha_log);
-    const logTimestampSec = Math.floor(logDate.getTime() / 1000);
-
-    // se puede cambiar cogiendo la visita mas reciente del array
-    const ultimaVisitaTimestampSec = enlace.ultima_visita
-      ? Math.floor(new Date(enlace.ultima_visita).getTime() / 1000)
-      : 0;
-
-    if (logTimestampSec < ultimaVisitaTimestampSec) continue;
-
-
-    // Comprobar si ya existe una visita con esta IP y mismo segundo en registro_visitas
-    const visitaExistente = enlace.registro_visitas.some((visita) => {
-      const visitaTimestampSec = Math.floor(
-        new Date(visita.timestamp).getTime() / 1000
-      );
-      return visita.ip === log.ip && visitaTimestampSec === logTimestampSec;
-    });
-
-    if (visitaExistente) {
-      // Ya contamos esta visita, no sumamos
-      continue;
-    }
-
-    // Nueva visita válida: agregar a registro_visitas
-    enlace.registro_visitas.push({
-      ip: log.ip,
-      timestamp: logDate,
-    });
-
-    enlace.visitas = (enlace.visitas || 0) + 1;
-
-    if (logTimestampSec > ultimaVisitaTimestampSec) {
-      enlace.ultima_visita = logDate;
-    }
-
-    await enlace.save();
+    if (!logsPorIP[log.ip]) logsPorIP[log.ip] = [];
+    logsPorIP[log.ip].push(log);
   }
 
-  return savedMatches;
+  for (const [ip, eventos] of Object.entries(logsPorIP)) {
+    let enlaceTemporal = null;
+
+    for (const evento of eventos) {
+      const logDate = new Date(evento.fecha_log);
+
+      // Si es un acceso con enlace_utm, lo tomamos como nuevo enlace activo
+      if (evento.enlace_utm) {
+        const enlace = await EnlaceAfiliado.findOne({ enlace_utm: evento.enlace_utm });
+        if (!enlace) continue;
+
+        const logTimestamp = logDate.getTime();
+        const ultimaVisitaTimestamp = enlace.ultima_visita
+          ? new Date(enlace.ultima_visita).getTime()
+          : 0;
+
+        const visitaExistente = enlace.registro_visitas.some(
+          (v) => v.ip === ip && new Date(v.timestamp).getTime() === logTimestamp
+        );
+
+        if (!visitaExistente && logTimestamp >= ultimaVisitaTimestamp) {
+          enlace.registro_visitas.push({ ip, timestamp: logDate });
+          enlace.visitas = (enlace.visitas || 0) + 1;
+
+          if (logTimestamp > ultimaVisitaTimestamp) {
+            enlace.ultima_visita = logDate;
+          }
+
+          await enlace.save();
+          console.log("✔ Visita registrada para IP:", ip);
+        }
+
+        // Guardamos el enlace temporal actual
+        enlaceTemporal = enlace;
+      }
+
+      // // Si ha llegado al formulario de contacto y ya había accedido por un enlace afiliado antes
+      // if (
+      //   enlaceTemporal &&
+      //   evento.url.includes("https://tamaritmotorcycles.com/contacto/")
+      // ) {
+      //   const contacto = contactos_csv.find((c) => c.ip === ip);
+      //   if (!contacto) continue;
+
+      //   const email = contacto.email;
+      //   const leadExistente = enlaceTemporal.registro_leads.some(
+      //     (l) => l.contacto === email
+      //   );
+
+      //   if (!leadExistente) {
+      //     enlaceTemporal.registro_leads.push({ contacto: email });
+      //     enlaceTemporal.leads = (enlaceTemporal.leads || 0) + 1;
+      //     await enlaceTemporal.save();
+      //     console.log(`🎯 Lead registrado para ${email} en enlace ${enlaceTemporal.enlace_utm}`);
+      //   }
+
+      //   // ⚠ IMPORTANTE: Evita que este email vuelva a contarse para otros enlaces
+      //   break;
+      // }
+    }
+  }
+
+  return [];
 };

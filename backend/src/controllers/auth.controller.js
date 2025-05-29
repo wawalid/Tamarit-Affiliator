@@ -5,16 +5,12 @@ import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
-
 const cookieOptions = {
   httpOnly: process.env.NODE_ENV === "production",
   secure: process.env.NODE_ENV === "production",
   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días
 };
-
-
-
 
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
@@ -29,7 +25,7 @@ export const verifyToken = async (req, res) => {
 
     return res.json({
       id: userFound._id,
-      username: userFound.username,
+      fullname: userFound.fullname,
       email: userFound.email,
       id_afiliado: userFound.id_afiliado,
       is_verified: userFound.is_verified,
@@ -38,36 +34,54 @@ export const verifyToken = async (req, res) => {
       identidad: userFound.identidad,
       completado: userFound.completado,
       is_admin: userFound.is_admin,
+      rrss_1: userFound.rrss_1,
+      rrss_2: userFound.rrss_2,
+      rrss_3: userFound.rrss_3,
       createdAt: userFound.createdAt,
     });
   });
 };
 
 export const register = async (req, res) => {
-  const { email, password, username } = req.body;
+  const { email, password, fullname, rrss_1, rrss_2, rrss_3 } = req.body;
 
   try {
     const userFound = await User.findOne({ email });
     if (userFound) return res.status(400).json(["email is already in use"]);
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: passwordHash });
+    const newUser = new User({
+      fullname,
+      email,
+      password: passwordHash,
+      rrss_1,
+      rrss_2,
+      rrss_3,
+    });
     const userSaved = await newUser.save();
 
-    const id_afiliado = `${username.charAt(0).toUpperCase()}${userSaved._id.toString().slice(-7)}`;
+    const id_afiliado = `${fullname.charAt(0).toUpperCase()}${userSaved._id
+      .toString()
+      .slice(-7)}`;
     userSaved.id_afiliado = id_afiliado;
     await userSaved.save();
 
-    const token = await createAccessToken({ id: userSaved._id, is_admin: userSaved.is_admin });
+    const token = await createAccessToken({
+      id: userSaved._id,
+      is_admin: userSaved.is_admin,
+    });
     res.cookie("token", token, cookieOptions);
 
     res.json({
       id: userSaved._id,
-      username: userSaved.username,
+      fullname: userSaved.fullname,
       email: userSaved.email,
       id_afiliado: userSaved.id_afiliado,
       completado: userSaved.completado,
       is_verified: userSaved.is_verified,
+      rrss_1: userSaved.rrss_1,
+      rrss_2: userSaved.rrss_2,
+      rrss_3: userSaved.rrss_3,
       createdAt: userSaved.createdAt,
       updatedAt: userSaved.updatedAt,
     });
@@ -86,12 +100,15 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, userFound.password);
     if (!isMatch) return res.status(400).json(["Invalid password"]);
 
-    const token = await createAccessToken({ id: userFound._id, is_admin: userFound.is_admin });
+    const token = await createAccessToken({
+      id: userFound._id,
+      is_admin: userFound.is_admin,
+    });
     res.cookie("token", token, cookieOptions);
 
     res.json({
       id: userFound._id,
-      username: userFound.username,
+      fullname: userFound.fullname,
       email: userFound.email,
       id_afiliado: userFound.id_afiliado,
       dni: userFound.dni,
@@ -100,6 +117,9 @@ export const login = async (req, res) => {
       completado: userFound.completado,
       is_verified: userFound.is_verified,
       is_admin: userFound.is_admin,
+      rrss_1: userFound.rrss_1,
+      rrss_2: userFound.rrss_2,
+      rrss_3: userFound.rrss_3,
       createdAt: userFound.createdAt,
       updatedAt: userFound.updatedAt,
     });
@@ -122,7 +142,7 @@ export const profile = async (req, res) => {
 
   return res.json({
     id: userFound._id,
-    username: userFound.username,
+    fullname: userFound.fullname,
     email: userFound.email,
     createdAt: userFound.createdAt,
     updatedAt: userFound.updatedAt,
@@ -130,23 +150,30 @@ export const profile = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { username, email, password, dni, cuenta_bancaria, identidad } = req.body;
+  const { fullname, email, password, dni, cuenta_bancaria, identidad, rrss_1, rrss_2, rrss_3 } =
+    req.body;
   const userFound = await User.findById(req.user.id);
   if (!userFound) return res.status(400).json({ message: "User not found" });
 
-  if (username) userFound.username = username;
+  if (fullname) userFound.fullname = fullname;
   if (email) userFound.email = email;
   if (password) userFound.password = await bcrypt.hash(password, 10);
+  if (rrss_1) userFound.rrss_1 = rrss_1;
+  if (rrss_2) userFound.rrss_2 = rrss_2;
+  if (rrss_3) userFound.rrss_3 = rrss_3;
   if (dni !== undefined) userFound.dni = dni;
-  if (cuenta_bancaria !== undefined) userFound.cuenta_bancaria = cuenta_bancaria;
+  if (cuenta_bancaria !== undefined)
+    userFound.cuenta_bancaria = cuenta_bancaria;
   if (identidad !== undefined) userFound.identidad = identidad;
 
-  userFound.completado = Boolean(userFound.dni && userFound.cuenta_bancaria && userFound.identidad);
+  userFound.completado = Boolean(
+    userFound.dni && userFound.cuenta_bancaria && userFound.identidad
+  );
   const updatedUser = await userFound.save();
 
   return res.json({
     id: updatedUser._id,
-    username: updatedUser.username,
+    fullname: updatedUser.fullname,
     email: updatedUser.email,
     id_afiliado: updatedUser.id_afiliado,
     is_verified: updatedUser.is_verified,
@@ -154,6 +181,9 @@ export const updateUser = async (req, res) => {
     cuenta_bancaria: updatedUser.cuenta_bancaria,
     identidad: updatedUser.identidad,
     completado: updatedUser.completado,
+    rrss_1: updatedUser.rrss_1,
+    rrss_2: updatedUser.rrss_2,
+    rrss_3: updatedUser.rrss_3,
     createdAt: updatedUser.createdAt,
     updatedAt: updatedUser.updatedAt,
   });

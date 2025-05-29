@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  username: z.string({
-    required_error: "Username is required",
+  fullname: z.string({
+    required_error: "fullname is required",
   }),
   email: z
     .string({
@@ -18,6 +18,13 @@ export const registerSchema = z.object({
     .min(6, {
       message: "Password must be at least 6 characters long",
     }),
+  rrss_1: z
+    .string({
+      required_error: "Social network link is required",
+    })
+    .url({
+      message: "Invalid URL format",
+    })
 });
 
 export const loginSchema = z.object({
@@ -30,12 +37,12 @@ export const loginSchema = z.object({
 });
 
 export const profileSchema = z.object({
-  username: z
+  fullname: z
     .string({
-      required_error: "Username is required",
+      required_error: "fullname is required",
     })
     .min(3, {
-      message: "Username must be at least 3 characters long",
+      message: "fullname must be at least 3 characters long",
     }),
 
   email: z

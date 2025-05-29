@@ -13,17 +13,24 @@ function ProfilePage() {
     setValue,
     formState: { errors },
   } = useForm();
-  const { user, updateUser, errors: profileErrors, successes: profileSuccess} = useAuth();
-
+  const {
+    user,
+    updateUser,
+    errors: profileErrors,
+    successes: profileSuccess,
+  } = useAuth();
 
   useEffect(() => {
     if (user) {
-      setValue("username", user.username);
+      setValue("fullname", user.fullname);
       setValue("email", user.email);
       setValue("password", "");
       setValue("identidad", user.identidad || "");
       setValue("dni", user.dni || "");
       setValue("cuenta_bancaria", user.cuenta_bancaria || "");
+      setValue("rrss_1", user.rrss_1 || "");
+      setValue("rrss_2", user.rrss_2 || "");
+      setValue("rrss_3", user.rrss_3 || "");
     }
   }, [user, setValue]);
 
@@ -38,7 +45,6 @@ function ProfilePage() {
       return () => clearTimeout(timer);
     }
   }, [location.state, user]);
-
 
   const onSubmit = async (data) => {
     if (!data.password) {
@@ -65,7 +71,7 @@ function ProfilePage() {
         <div className="flex flex-col items-center justify-center bg-zinc-900 text-white space-y-4 p-4">
           <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md m-2">
             <h2 className="text-2xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 animate-pulse">
-              ¡Bienvenido, {user.username}!
+              ¡Bienvenido, {user.fullname}!
             </h2>
             {profileErrors.map((error, i) => (
               <div className="bg-red-500 p-2 text-white my-2" key={i}>
@@ -80,12 +86,12 @@ function ProfilePage() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <input
                 type="text"
-                {...register("username", { required: true })}
+                {...register("fullname", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-                placeholder="Username"
+                placeholder="Fullname"
               />
-              {errors.username && (
-                <p className="text-red-500">Username is required</p>
+              {errors.fullname && (
+                <p className="text-red-500">fullname is required</p>
               )}
 
               <input
@@ -104,6 +110,26 @@ function ProfilePage() {
                 placeholder="Password"
               />
               {/* {errors.password && <p className="text-red-500">Password is required</p>} */}
+              <input
+                type="url"
+                {...register("rrss_1", { required: true })}
+                className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
+                placeholder="Your Social network link"
+              />
+              {errors.rrss_1 && <p className="text-red-500">Social network is required</p>}
+              <input
+                type="url"
+                {...register("rrss_2")}
+                className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
+                placeholder="Your Social network link (Optional)"
+              />
+              <input
+                type="url"
+                {...register("rrss_3")}
+                className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
+                placeholder="Your Social network link (Optional)"
+              />
+
               <h2>Datos bancarios</h2>
               <input
                 type="text"

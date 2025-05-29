@@ -5,7 +5,7 @@ export function parseCMSLogs(rawLogText) {
   const logs = [];
 
   for (const line of lines) {
-    // Regex para extraer IP, fecha y URL con parámetros UTM
+    // Regex para extraer IP, fecha y URL
     const logRegex = /^(\d{1,3}(?:\.\d{1,3}){3}) - - \[([^\]]+)\] "GET ([^"]+?) HTTP\/[\d.]+" \d+ \d+/;
     const match = line.match(logRegex);
 
@@ -15,24 +15,31 @@ export function parseCMSLogs(rawLogText) {
     const fechaStr = match[2]; // ej: 07/May/2025:08:49:58 +0200
     const urlPath = match[3];
 
-    // Si no tiene parámetros UTM, lo ignoramos
-    if (!urlPath.includes("utm_campaign") || !urlPath.includes("utm_source") || !urlPath.includes("id_afiliado")) {
-      continue;
-    }
-
     const fechaLog = parse(fechaStr, "dd/MMM/yyyy:HH:mm:ss X", new Date());
     const baseUrl = 'https://tamaritmotorcycles.com';
-    const enlaceUtm = baseUrl + urlPath;
+    const url = baseUrl + urlPath;
 
-    const urlParams = new URLSearchParams(urlPath.split('?')[1]);
-    const nombreEnlace = urlParams.get('utm_campaign') || '';
-
-    logs.push({
+    // Creamos el objeto base
+    const logObj = {
       ip,
       fecha_log: fechaLog,
-      enlace_utm: enlaceUtm,
-      nombre_enlace: nombreEnlace,
-    });
+      url, // siempre
+    };
+
+    // Si tiene parámetros UTM, los procesamos y añadimos campos extra
+    if (
+      urlPath.includes("utm_campaign") &&
+      urlPath.includes("utm_source") &&
+      urlPath.includes("id_afiliado")
+    ) {
+      const urlParams = new URLSearchParams(urlPath.split('?')[1]);
+      const nombreEnlace = urlParams.get('utm_campaign') || '';
+
+      logObj.enlace_utm = url; // es la URL con los UTM
+      logObj.nombre_enlace = nombreEnlace;
+    }
+
+    logs.push(logObj);
   }
 
   return logs;

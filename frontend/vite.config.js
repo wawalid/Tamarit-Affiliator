@@ -8,7 +8,7 @@ export default defineConfig({
     host: '0.0.0.0', // esto es equivalente a `host: true` pero más explícito
     port: 5173,
     hmr: {
-      host: '192.168.1.203', // tu IP local actual (ajústala si cambia)
+      host: '192.168.0.27', // tu IP local actual (ajústala si cambia)
       protocol: 'ws',
     },
   },

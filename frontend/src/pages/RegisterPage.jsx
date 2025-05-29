@@ -17,6 +17,7 @@ function RegisterPage() {
 
 
     const onSubmit = handleSubmit(async (values) => {
+        
         signup(values)
     })
 
@@ -32,11 +33,11 @@ function RegisterPage() {
                     ))
                 }
                 <form onSubmit={onSubmit}>
-                    <input type="text" {...register("username", { required: true })}
+                    <input type="text" {...register("fullname", { required: true })}
                         className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-                        placeholder="Username"
+                        placeholder="Fullname"
                     />
-                    {errors.username && <p className="text-red-500">Username is required</p>}
+                    {errors.fullname && <p className="text-red-500">fullname is required</p>}
 
                     <input type="email" {...register("email", { required: true })}
                         className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
@@ -49,6 +50,12 @@ function RegisterPage() {
                         placeholder="Password"
                     />
                     {errors.password && <p className="text-red-500">Password is required</p>}
+
+                    <input type="url" {...register("rrss_1", { required: true })}
+                        className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
+                        placeholder="Your Social network link"
+                    />
+                    {errors.rrss_1 && <p className="text-red-500">Social network link is required</p>}
 
                     <button type="submit">
                         Register
