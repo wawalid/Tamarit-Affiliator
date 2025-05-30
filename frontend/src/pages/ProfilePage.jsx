@@ -98,7 +98,7 @@ function ProfilePage() {
                 type="email"
                 {...register("email", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-                placeholder="Email"
+                placeholder="Email" readOnly
               />
               {errors.email && (
                 <p className="text-red-500">Email is required</p>
