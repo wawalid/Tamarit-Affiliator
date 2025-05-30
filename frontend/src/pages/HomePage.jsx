@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function LandingPage() {
   return (
     <div className="min-h-screen bg-[#202020] text-white font-sans">
@@ -8,12 +10,12 @@ function LandingPage() {
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Promociona nuestros productos y recibe comisiones por cada venta generada desde tus enlaces.
           </p>
-          <a
-            href="/register"
+           <Link
+            to="/login"
             className="mt-6 inline-block bg-white text-black font-semibold px-6 py-3 rounded-xl hover:bg-gray-200 transition"
           >
             Únete ahora
-          </a>
+          </Link>
         </section>
 
         {/* Cómo funciona */}
