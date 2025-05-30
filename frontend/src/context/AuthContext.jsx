@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import {
   registerRequest,
   loginRequest,
+  logoutRequest,
   verifyTokenRequest,
   updateUserRequest,
 } from "../api/auth";
@@ -54,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     Cookies.remove("token");
-    Cookies.remove("user");
+    logoutRequest()
     setIsAuthenticated(false);
     setUser(null);
   };
