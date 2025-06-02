@@ -1,87 +1,97 @@
+import { get } from "mongoose";
 import { parseCMSLogs } from "../utils/parsecmslogs.js";
 import { parseContactCSV } from "../utils/parseContactCSV.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
 
 export const findAndSaveMatches = async (formdata) => {
+  //obtener los ficheros de logs y contactos
   const { logs_raw, contactos_raw } = formdata;
   if (!logs_raw || !contactos_raw) {
     throw new Error("Faltan datos: logs y contactos son requeridos.");
   }
 
+  // try {
+  //   const AffliateIDs = await User.find({}, { id_afiliado: 1 });
+  // } catch (error) {
+  //   console.error(error);
+  //   return res.status(500).json(["Error retrieving affiliate IDs"]);
+  // }
+
+  // Parsear los logs y contactos
   const logs = await parseCMSLogs(logs_raw);
   const contactos_csv = await parseContactCSV(contactos_raw);
+  const savedMatches = [];
 
-  // Ordena los logs por fecha
-  logs.sort((a, b) => new Date(a.fecha_log) - new Date(b.fecha_log));
-
-  // Agrupa los logs por IP
-  const logsPorIP = {};
   for (const log of logs) {
-    if (!logsPorIP[log.ip]) logsPorIP[log.ip] = [];
-    logsPorIP[log.ip].push(log);
-  }
+    // console.log("log desde el controller", log);
 
-  for (const [ip, eventos] of Object.entries(logsPorIP)) {
-    let enlaceTemporal = null;
+    // esto es la parte para contar visitas
+    if (!log.enlace_utm) continue; // si no hay enlace, saltar
 
-    for (const evento of eventos) {
-      const logDate = new Date(evento.fecha_log);
+    const enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
+    if (!enlace) continue; // no existe enlace en BD
 
-      // Si es un acceso con enlace_utm, lo tomamos como nuevo enlace activo
-      if (evento.enlace_utm) {
-        const enlace = await EnlaceAfiliado.findOne({ enlace_utm: evento.enlace_utm });
-        if (!enlace) continue;
+    const logDate = new Date(log.fecha_log);
+    const logTimestampSec = Math.floor(logDate.getTime() / 1000);
 
-        const logTimestamp = logDate.getTime();
-        const ultimaVisitaTimestamp = enlace.ultima_visita
-          ? new Date(enlace.ultima_visita).getTime()
-          : 0;
+    // se puede cambiar cogiendo la visita mas reciente del array
+    const ultimaVisitaTimestampSec = enlace.ultima_visita
+      ? Math.floor(new Date(enlace.ultima_visita).getTime() / 1000)
+      : 0;
 
-        const visitaExistente = enlace.registro_visitas.some(
-          (v) => v.ip === ip && new Date(v.timestamp).getTime() === logTimestamp
-        );
+    if (logTimestampSec < ultimaVisitaTimestampSec) continue;
 
-        if (!visitaExistente && logTimestamp >= ultimaVisitaTimestamp) {
-          enlace.registro_visitas.push({ ip, timestamp: logDate });
-          enlace.visitas = (enlace.visitas || 0) + 1;
+    // Comprobar si ya existe una visita con esta IP y mismo segundo en registro_visitas
+    const visitaExistente = enlace.registro_visitas.some((visita) => {
+      const visitaTimestampSec = Math.floor(
+        new Date(visita.timestamp).getTime() / 1000
+      );
+      return visita.ip === log.ip && visitaTimestampSec === logTimestampSec;
+    });
 
-          if (logTimestamp > ultimaVisitaTimestamp) {
-            enlace.ultima_visita = logDate;
-          }
-
-          await enlace.save();
-          console.log("✔ Visita registrada para IP:", ip);
-        }
-
-        // Guardamos el enlace temporal actual
-        enlaceTemporal = enlace;
-      }
-
-      // // Si ha llegado al formulario de contacto y ya había accedido por un enlace afiliado antes
-      // if (
-      //   enlaceTemporal &&
-      //   evento.url.includes("https://tamaritmotorcycles.com/contacto/")
-      // ) {
-      //   const contacto = contactos_csv.find((c) => c.ip === ip);
-      //   if (!contacto) continue;
-
-      //   const email = contacto.email;
-      //   const leadExistente = enlaceTemporal.registro_leads.some(
-      //     (l) => l.contacto === email
-      //   );
-
-      //   if (!leadExistente) {
-      //     enlaceTemporal.registro_leads.push({ contacto: email });
-      //     enlaceTemporal.leads = (enlaceTemporal.leads || 0) + 1;
-      //     await enlaceTemporal.save();
-      //     console.log(`🎯 Lead registrado para ${email} en enlace ${enlaceTemporal.enlace_utm}`);
-      //   }
-
-      //   // ⚠ IMPORTANTE: Evita que este email vuelva a contarse para otros enlaces
-      //   break;
-      // }
+    if (visitaExistente) {
+      // Ya contamos esta visita, no sumamos
+      continue;
     }
+
+    // Nueva visita válida: agregar a registro_visitas
+    enlace.registro_visitas.push({
+      ip: log.ip,
+      timestamp: logDate,
+    });
+
+    enlace.visitas = (enlace.visitas || 0) + 1;
+
+    if (logTimestampSec > ultimaVisitaTimestampSec) {
+      enlace.ultima_visita = logDate;
+    }
+
+    await enlace.save();
+
+    // // contador de leads
+    //     for (const contacto_csv of contactos_csv) {
+    //       if (log.ip === contacto_csv.ip) {
+
+    //         const leadExistente = enlace.registro_leads.some((lead) => {
+    //           return lead.contacto === contacto_csv.email;
+    //         });
+
+    //         if (leadExistente) {
+    //           continue;
+    //         }
+
+    //         enlace.registro_leads.push({
+    //           contacto: contacto.contacto,
+    //         });
+
+    //         enlace.leads = (enlace.leads || 0) + 1;
+
+    //       }
+
+    //     }
+
+    
   }
 
-  return [];
+  return savedMatches;
 };
