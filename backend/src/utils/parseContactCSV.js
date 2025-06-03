@@ -8,22 +8,21 @@ export function parseContactCSV(csvText) {
     skip_empty_lines: true,
   });
 
-  const pedidos = [];
+  const contactos = [];
 
   for (const row of records) {
     // console.log("fila: ", row);
-    const pedido = {
-      order_id: row["Order ID"],
+    const contacto = {
       email: row["Email"] || row["Customer Email"],
-      fecha_pedido: new Date(row["Fecha"]),
+      fecha_contacto: new Date(row["Fecha"]),
       ip: row["IP"],
       // amount: parseFloat(row["Amount"]),
-      currency: row["Currency"],
+      // currency: row["Currency"],
     };
     
-    pedidos.push(pedido);
+    contactos.push(contacto);
   }
-  // console.log("Pedidos parseados:", pedidos);
+  console.log("contactos parseados:", contactos);
 
-  return pedidos;
+  return contactos;
 }

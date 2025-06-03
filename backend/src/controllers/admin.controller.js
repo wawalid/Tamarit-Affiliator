@@ -1,47 +1,40 @@
-import { get } from "mongoose";
 import { parseCMSLogs } from "../utils/parsecmslogs.js";
 import { parseContactCSV } from "../utils/parseContactCSV.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
 
+let margenMinutos = 2;
+let margenMilisegundos = margenMinutos * 60 * 1000;
+
 export const findAndSaveMatches = async (formdata) => {
-  //obtener los ficheros de logs y contactos
   const { logs_raw, contactos_raw } = formdata;
   if (!logs_raw || !contactos_raw) {
     throw new Error("Faltan datos: logs y contactos son requeridos.");
   }
 
-  // try {
-  //   const AffliateIDs = await User.find({}, { id_afiliado: 1 });
-  // } catch (error) {
-  //   console.error(error);
-  //   return res.status(500).json(["Error retrieving affiliate IDs"]);
-  // }
-
-  // Parsear los logs y contactos
   const logs = await parseCMSLogs(logs_raw);
   const contactos_csv = await parseContactCSV(contactos_raw);
   const savedMatches = [];
 
-  for (const log of logs) {
-    // console.log("log desde el controller", log);
+  const ipsAfiliadas = [];
 
-    // esto es la parte para contar visitas
-    if (!log.enlace_utm) continue; // si no hay enlace, saltar
+  // ============================
+  // PRIMER BUCLE: VISITAS
+  // ============================
+  for (const log of logs) {
+    if (!log.enlace_utm) continue;
 
     const enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
-    if (!enlace) continue; // no existe enlace en BD
+    if (!enlace) continue;
 
     const logDate = new Date(log.fecha_log);
     const logTimestampSec = Math.floor(logDate.getTime() / 1000);
 
-    // se puede cambiar cogiendo la visita mas reciente del array
     const ultimaVisitaTimestampSec = enlace.ultima_visita
       ? Math.floor(new Date(enlace.ultima_visita).getTime() / 1000)
       : 0;
 
     if (logTimestampSec < ultimaVisitaTimestampSec) continue;
 
-    // Comprobar si ya existe una visita con esta IP y mismo segundo en registro_visitas
     const visitaExistente = enlace.registro_visitas.some((visita) => {
       const visitaTimestampSec = Math.floor(
         new Date(visita.timestamp).getTime() / 1000
@@ -49,12 +42,8 @@ export const findAndSaveMatches = async (formdata) => {
       return visita.ip === log.ip && visitaTimestampSec === logTimestampSec;
     });
 
-    if (visitaExistente) {
-      // Ya contamos esta visita, no sumamos
-      continue;
-    }
+    if (visitaExistente) continue;
 
-    // Nueva visita válida: agregar a registro_visitas
     enlace.registro_visitas.push({
       ip: log.ip,
       timestamp: logDate,
@@ -68,30 +57,44 @@ export const findAndSaveMatches = async (formdata) => {
 
     await enlace.save();
 
-    // // contador de leads
-    //     for (const contacto_csv of contactos_csv) {
-    //       if (log.ip === contacto_csv.ip) {
-
-    //         const leadExistente = enlace.registro_leads.some((lead) => {
-    //           return lead.contacto === contacto_csv.email;
-    //         });
-
-    //         if (leadExistente) {
-    //           continue;
-    //         }
-
-    //         enlace.registro_leads.push({
-    //           contacto: contacto.contacto,
-    //         });
-
-    //         enlace.leads = (enlace.leads || 0) + 1;
-
-    //       }
-
-    //     }
-
-    
+    // Guardamos IP y fecha de la visita afiliada
+    ipsAfiliadas.push({ ip: log.ip, fecha_log: logDate, enlace });
   }
 
-  return savedMatches;
-};
+  // ============================
+  // SEGUNDO BUCLE: LEADS
+  // ============================
+// ============================
+// SEGUNDO BUCLE: LEADS
+// ============================
+for (const { ip, enlace } of ipsAfiliadas) {
+  const logsContactoMismaIP = logs.filter(
+    (l) => l.ip === ip && l.url.includes("contacto")
+  );
+
+  if (logsContactoMismaIP.length > 0) {
+    for (const contacto_csv of contactos_csv) {
+      if (ip === contacto_csv.ip) {
+        console.log("✔ Coincidencia IP + contacto en URL que contiene 'contacto'");
+
+        const leadExistente = enlace.registro_leads?.some(
+          (lead) => lead.contacto === contacto_csv.email
+        );
+
+        if (!leadExistente) {
+          enlace.registro_leads = enlace.registro_leads || [];
+          enlace.registro_leads.push({
+            contacto: contacto_csv.email,
+          });
+
+          enlace.leads = (enlace.leads || 0) + 1;
+
+          await enlace.save();
+          console.log("🎯 Lead registrado:", contacto_csv.email);
+
+        }
+      }
+    }
+  }
+}
+}
