@@ -4,9 +4,10 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
 function AdminPage() {
-  const { getUsers, users, toggleCompletado, toggleVerificado, match } = useAuth(); 
+  const { getUsers, users, toggleVerificado, match } = useAuth();
   const [cmsLogFile, setCmsLogFile] = useState(null);
   const [contactFyle, setContactFyle] = useState(null);
+  const [matchResult, setMatchResult] = useState(null);
 
   useEffect(() => {
     getUsers();
@@ -14,7 +15,7 @@ function AdminPage() {
 
   const handleFileUpload = async () => {
     if (!cmsLogFile || !contactFyle) {
-      alert("Por favor, selecciona ambos archivos.");
+      setMatchResult({ success: false, message: "Por favor, selecciona ambos archivos." });
       return;
     }
 
@@ -23,11 +24,15 @@ function AdminPage() {
     formData.append("contact_csv", contactFyle);
 
     try {
-      await match(formData);
-      console.log("Archivos procesados correctamente");
+      const respuesta = await match(formData);
+      setMatchResult(respuesta);
+      console.log("Archivos procesados correctamente", respuesta);
     } catch (error) {
       console.error("Error al procesar archivos:", error);
-      // alert("Hubo un error al procesar los archivos.");
+      setMatchResult({
+        success: false,
+        message: error.response?.data?.message || "Error al procesar los archivos.",
+      });
     }
   };
 
@@ -88,7 +93,7 @@ function AdminPage() {
           <label className="block mb-1">Logs CMS (access.1):</label>
           <input
             type="file"
-            accept=".1,.log,.txt"
+            accept="access.1"
             onChange={(e) => setCmsLogFile(e.target.files[0])}
             className="block w-full text-sm text-white"
           />
@@ -108,6 +113,18 @@ function AdminPage() {
         >
           Subir archivos
         </button>
+
+        {/* Resultado del procesamiento */}
+        {matchResult && (
+          <div className={`mt-4 p-4 rounded ${matchResult.success ? "bg-green-700" : "bg-red-700"}`}>
+            <p className="font-semibold">{matchResult.message}</p>
+            {matchResult.success && (
+              <ul className="mt-2 list-disc list-inside text-sm">
+                <p></p>
+              </ul>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -2,9 +2,6 @@ import { parseCMSLogs } from "../utils/parsecmslogs.js";
 import { parseContactCSV } from "../utils/parseContactCSV.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
 
-let margenMinutos = 2;
-let margenMilisegundos = margenMinutos * 60 * 1000;
-
 export const findAndSaveMatches = async (formdata) => {
   const { logs_raw, contactos_raw } = formdata;
   if (!logs_raw || !contactos_raw) {
@@ -13,13 +10,11 @@ export const findAndSaveMatches = async (formdata) => {
 
   const logs = await parseCMSLogs(logs_raw);
   const contactos_csv = await parseContactCSV(contactos_raw);
-  const savedMatches = [];
 
   const ipsAfiliadas = [];
 
-  // ============================
+
   // PRIMER BUCLE: VISITAS
-  // ============================
   for (const log of logs) {
     if (!log.enlace_utm) continue;
 
@@ -56,45 +51,43 @@ export const findAndSaveMatches = async (formdata) => {
     }
 
     await enlace.save();
-
-    // Guardamos IP y fecha de la visita afiliada
     ipsAfiliadas.push({ ip: log.ip, fecha_log: logDate, enlace });
   }
 
-  // ============================
+
+
+
+  
   // SEGUNDO BUCLE: LEADS
-  // ============================
-// ============================
-// SEGUNDO BUCLE: LEADS
-// ============================
-for (const { ip, enlace } of ipsAfiliadas) {
-  const logsContactoMismaIP = logs.filter(
-    (l) => l.ip === ip && l.url.includes("contacto")
-  );
+  for (const { ip, enlace } of ipsAfiliadas) {
+    const logsContactoMismaIP = logs.filter(
+      (l) => l.ip === ip && l.url.includes("contacto")
+    );
 
-  if (logsContactoMismaIP.length > 0) {
-    for (const contacto_csv of contactos_csv) {
-      if (ip === contacto_csv.ip) {
-        console.log("✔ Coincidencia IP + contacto en URL que contiene 'contacto'");
+    if (logsContactoMismaIP.length > 0) {
+      for (const contacto_csv of contactos_csv) {
+        if (ip === contacto_csv.ip) {
+          const leadExistente = enlace.registro_leads?.some(
+            (lead) =>
+              lead.contacto.toLowerCase().trim() ===
+              contacto_csv.email.toLowerCase().trim()
+          );
 
-        const leadExistente = enlace.registro_leads?.some(
-          (lead) => lead.contacto === contacto_csv.email
-        );
+          if (leadExistente) continue;
 
-        if (!leadExistente) {
           enlace.registro_leads = enlace.registro_leads || [];
           enlace.registro_leads.push({
             contacto: contacto_csv.email,
           });
-
           enlace.leads = (enlace.leads || 0) + 1;
 
           await enlace.save();
-          console.log("🎯 Lead registrado:", contacto_csv.email);
-
         }
       }
     }
   }
-}
-}
+
+  return {
+    success: true,
+  };
+};

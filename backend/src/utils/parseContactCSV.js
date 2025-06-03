@@ -22,7 +22,7 @@ export function parseContactCSV(csvText) {
     
     contactos.push(contacto);
   }
-  console.log("contactos parseados:", contactos);
+  // console.log("contactos parseados:", contactos);
 
   return contactos;
 }
