@@ -1,10 +1,13 @@
 import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 import { useEffect } from "react";
 import Affiliate_linkCard from "../components/Affiliate_linkCard";
+import { useAuth } from "../context/AuthContext";
+import InfoCard from "../components/InfoCard";
 
 
 function MyAffiliatesPage() {
   const { affiliate_links, getAffiliateLinks, loading } = useAffiliateLinks();
+  const {user} = useAuth();
 
   useEffect(() => {
     getAffiliateLinks();
@@ -22,6 +25,21 @@ function MyAffiliatesPage() {
 
   return (
     <div className="flex flex-col items-center space-y-4 p-4">
+      <div>
+                {user && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-zinc-800 p-6 rounded shadow-md">
+            <InfoCard label="Nombre completo" value={user.fullname} />
+            <InfoCard label="Email" value={user.email} />
+            <InfoCard label="DNI" value={user.dni} />
+            <InfoCard label="ID Afiliado" value={user.id_afiliado} />
+            <InfoCard label="Identidad" value={user.identidad} />
+            <InfoCard label="Cuenta bancaria" value={user.cuenta_bancaria} />
+            <InfoCard label="RRSS 1" value={user.rrss_1} />
+            <InfoCard label="RRSS 2" value={user.rrss_2} />
+            <InfoCard label="RRSS 3" value={user.rrss_3} />
+          </div>
+        )}
+      </div>
         <table className="min-w-full bg-zinc-800 rounded shadow-lg mt-4">
           <thead>
             <tr className="bg-zinc-700 text-left">

@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 import { useAuth } from "../context/AuthContext";
+import InfoCard from "../components/InfoCard";
+
 
 function UserDetailPage() {
   const { id } = useParams();
@@ -27,15 +29,15 @@ function UserDetailPage() {
         </h1>
         {affiliateUser && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-zinc-800 p-6 rounded shadow-md">
-            <Info label="Nombre completo" value={affiliateUser.fullname} />
-            <Info label="Email" value={affiliateUser.email} />
-            <Info label="DNI" value={affiliateUser.dni} />
-            <Info label="ID Afiliado" value={affiliateUser.id_afiliado} />
-            <Info label="Identidad" value={affiliateUser.identidad} />
-            <Info label="Cuenta bancaria" value={affiliateUser.cuenta_bancaria} />
-            <Info label="RRSS 1" value={affiliateUser.rrss_1} />
-            <Info label="RRSS 2" value={affiliateUser.rrss_2} />
-            <Info label="RRSS 3" value={affiliateUser.rrss_3} />
+            <InfoCard label="Nombre completo" value={affiliateUser.fullname} />
+            <InfoCard label="Email" value={affiliateUser.email} />
+            <InfoCard label="DNI" value={affiliateUser.dni} />
+            <InfoCard label="ID Afiliado" value={affiliateUser.id_afiliado} />
+            <InfoCard label="Identidad" value={affiliateUser.identidad} />
+            <InfoCard label="Cuenta bancaria" value={affiliateUser.cuenta_bancaria} />
+            <InfoCard label="RRSS 1" value={affiliateUser.rrss_1} />
+            <InfoCard label="RRSS 2" value={affiliateUser.rrss_2} />
+            <InfoCard label="RRSS 3" value={affiliateUser.rrss_3} />
           </div>
         )}
       </div>
@@ -96,13 +98,5 @@ function UserDetailPage() {
 }
 
 // Componente auxiliar para mostrar cada dato bonito
-function Info({ label, value }) {
-  return (
-    <div className="flex flex-col bg-zinc-700 p-4 rounded">
-      <span className="text-sm text-gray-400">{label}</span>
-      <span className="font-semibold">{value || "—"}</span>
-    </div>
-  );
-}
 
 export default UserDetailPage;

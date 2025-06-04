@@ -90,7 +90,7 @@ function AdminPage() {
       <div className="w-1/3 bg-zinc-800 text-white p-6 rounded shadow-lg h-fit">
         <h2 className="text-xl font-semibold mb-4">Subir archivos</h2>
         <div className="mb-4">
-          <label className="block mb-1">Logs CMS (access.1):</label>
+          <label className="block mb-1">Logs CMS (access):</label>
           <input
             type="file"
             accept="access.1"

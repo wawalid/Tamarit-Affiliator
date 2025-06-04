@@ -30,7 +30,8 @@ function LoginPage() {
                         </div>
                     ))
                 }
-                <h1 className="text-2xl text-white">Login</h1>
+                {/* <h1 className="text-2xl text-white">Login</h1> */}
+                <img src="../../media/tmrt-logo_480_prueba.png" alt="" className="" />
                 <form onSubmit={onSubmit}>
                     <input type="email" {...register("email", { required: true })}
                         className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
@@ -45,7 +46,7 @@ function LoginPage() {
                     {errors.password && <p className="text-red-500">Password is required</p>}
 
 
-                    <button type="submit">
+                    <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded-md my-2 hover:bg-blue-600 transition-colors">
                         Login
                     </button>
                 </form>

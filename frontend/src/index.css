@@ -1,6 +1,8 @@
 @import "tailwindcss";
+@import '../fonts/stylesheet.css';
 
 body {
     background: #202020;
     color:white;
+    font-family: 'Marsden Extended', sans-serif;
 }

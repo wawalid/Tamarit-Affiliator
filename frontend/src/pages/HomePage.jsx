@@ -14,7 +14,7 @@ function LandingPage() {
     }
   }
   return (
-    <div className="min-h-screen bg-[#202020] text-white font-sans">
+    <div className="min-h-screen bg-[#202020] text-white">
       <div className="max-w-6xl mx-auto px-6 py-12">
         {/* Hero */}
         <section className="text-center mb-16">
