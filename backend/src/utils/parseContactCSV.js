@@ -1,28 +1,29 @@
 import { parse } from "csv-parse/sync";
 
 export function parseContactCSV(csvText) {
-  // console.log("viendo el csv parser: \n", csvText);
-
   const records = parse(csvText, {
     columns: true,
     skip_empty_lines: true,
   });
 
   const contactos = [];
+  const fechaMinima = new Date("2025-05-01");
 
   for (const row of records) {
-    // console.log("fila: ", row);
+    const fechaContacto = new Date(row["Fecha"]);
+
+    // Ignora contactos anteriores al 1 de mayo de 2025
+    if (isNaN(fechaContacto) || fechaContacto < fechaMinima) continue;
+
     const contacto = {
       email: row["Email"] || row["Customer Email"],
-      fecha_contacto: new Date(row["Fecha"]),
+      fecha_contacto: fechaContacto,
       ip: row["IP"],
-      // amount: parseFloat(row["Amount"]),
-      // currency: row["Currency"],
     };
-    
+
     contactos.push(contacto);
   }
-  // console.log("contactos parseados:", contactos);
 
+  // console.log("contactos parseados:", contactos);
   return contactos;
 }

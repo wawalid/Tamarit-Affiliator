@@ -59,34 +59,45 @@ export const findAndSaveMatches = async (formdata) => {
 
   
   // SEGUNDO BUCLE: LEADS
-  for (const { ip, enlace } of ipsAfiliadas) {
-    const logsContactoMismaIP = logs.filter(
-      (l) => l.ip === ip && l.url.includes("contacto")
-    );
+for (const contacto_csv of contactos_csv) {
+  const ip = contacto_csv.ip;
+  const enlaceMatch = ipsAfiliadas.find((item) => item.ip === ip);
 
-    if (logsContactoMismaIP.length > 0) {
-      for (const contacto_csv of contactos_csv) {
-        if (ip === contacto_csv.ip) {
-          const leadExistente = enlace.registro_leads?.some(
-            (lead) =>
-              lead.contacto.toLowerCase().trim() ===
-              contacto_csv.email.toLowerCase().trim()
-          );
+  if (!enlaceMatch) continue;
 
-          if (leadExistente) continue;
+  const { enlace } = enlaceMatch;
 
-          enlace.registro_leads = enlace.registro_leads || [];
-          enlace.registro_leads.push({
-            contacto: contacto_csv.email,
-          });
-          enlace.leads = (enlace.leads || 0) + 1;
+  const haVisitadoContacto = logs.some(
+    (l) => l.ip === ip && l.url.includes("contacto")
+  );
 
-          await enlace.save();
-        }
-      }
-    }
-  }
+  if (!haVisitadoContacto) continue;
 
+  // Prevenir duplicado del lead
+  const leadExistente = enlace.registro_leads?.some(
+    (lead) =>
+      lead.contacto.toLowerCase().trim() ===
+      contacto_csv.email.toLowerCase().trim()
+  );
+
+  if (leadExistente) continue;
+
+  enlace.registro_leads = enlace.registro_leads || [];
+  enlace.registro_leads.push({
+    contacto: contacto_csv.email,
+    fecha_lead: contacto_csv.fecha_contacto,
+  });
+  enlace.leads = (enlace.leads || 0) + 1;
+
+  await enlace.save();
+}
+
+
+
+  // contador de €
+  // un bucle for para recorrer todos los enlaces y mirar dentro de sus registro_leads y pasarle a la api de shopi ese correo y el momento en el que se hizo
+    const enlace_tmp = await EnlaceAfiliado.findOne({ nombre_enlace: "probando fechas" });
+    console.log(enlace_tmp)
   return {
     success: true,
   };

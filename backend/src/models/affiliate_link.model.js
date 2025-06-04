@@ -5,7 +5,8 @@ const visitaSchema = new mongoose.Schema({
   timestamp: { type: Date, required: true },
 });
 const leadschema = new mongoose.Schema({
-  contacto: { type: String, required: true }
+  contacto: { type: String, required: true },
+  fecha_lead: { type: Date, required: true },
 });
 
 
