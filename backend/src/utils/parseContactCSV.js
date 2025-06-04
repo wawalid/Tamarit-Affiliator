@@ -20,10 +20,10 @@ export function parseContactCSV(csvText) {
       fecha_contacto: fechaContacto,
       ip: row["IP"],
     };
-
+    console.log("contacto antes de ser parseado: ", contacto)
     contactos.push(contacto);
   }
 
-  // console.log("contactos parseados:", contactos);
+  console.log("contactos parseados:", contactos);
   return contactos;
 }

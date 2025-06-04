@@ -73,6 +73,14 @@ for (const contacto_csv of contactos_csv) {
 
   if (!haVisitadoContacto) continue;
 
+
+if (!contacto_csv.fecha_contacto) {
+  console.warn(`Contacto con email ${contacto_csv.email} no tiene fecha_contacto. Saltando...`);
+  continue;
+}
+
+
+
   // Prevenir duplicado del lead
   const leadExistente = enlace.registro_leads?.some(
     (lead) =>
