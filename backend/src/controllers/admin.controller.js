@@ -104,8 +104,8 @@ if (!contacto_csv.fecha_contacto) {
 
   // contador de €
   // un bucle for para recorrer todos los enlaces y mirar dentro de sus registro_leads y pasarle a la api de shopi ese correo y el momento en el que se hizo
-    const enlace_tmp = await EnlaceAfiliado.findOne({ nombre_enlace: "probando fechas" });
-    console.log(enlace_tmp)
+    // const enlace_tmp = await EnlaceAfiliado.findOne({ nombre_enlace: "probando fechas" });
+    // console.log(enlace_tmp)
   return {
     success: true,
   };
