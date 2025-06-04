@@ -13,7 +13,6 @@ export const findAndSaveMatches = async (formdata) => {
 
   const ipsAfiliadas = [];
 
-
   // PRIMER BUCLE: VISITAS
   for (const log of logs) {
     if (!log.enlace_utm) continue;
@@ -39,73 +38,63 @@ export const findAndSaveMatches = async (formdata) => {
 
     if (visitaExistente) continue;
 
-    enlace.registro_visitas.push({
-      ip: log.ip,
-      timestamp: logDate,
-    });
+    await EnlaceAfiliado.updateOne(
+      { _id: enlace._id },
+      {
+        $push: {
+          registro_visitas: {
+            ip: log.ip,
+            timestamp: logDate,
+          },
+        },
+        $inc: { visitas: 1 },
+        $set: { ultima_visita: logDate },
+      }
+    );
 
-    enlace.visitas = (enlace.visitas || 0) + 1;
-
-    if (logTimestampSec > ultimaVisitaTimestampSec) {
-      enlace.ultima_visita = logDate;
-    }
-
-    await enlace.save();
     ipsAfiliadas.push({ ip: log.ip, fecha_log: logDate, enlace });
   }
 
-
-
-
-  
   // SEGUNDO BUCLE: LEADS
-for (const contacto_csv of contactos_csv) {
-  const ip = contacto_csv.ip;
-  const enlaceMatch = ipsAfiliadas.find((item) => item.ip === ip);
+  for (const contacto_csv of contactos_csv) {
+    const ip = contacto_csv.ip;
+    const enlaceMatch = ipsAfiliadas.find((item) => item.ip === ip);
+    if (!enlaceMatch) continue;
 
-  if (!enlaceMatch) continue;
+    const { enlace } = enlaceMatch;
 
-  const { enlace } = enlaceMatch;
+    const haVisitadoContacto = logs.some(
+      (l) => l.ip === ip && l.url.includes("contacto")
+    );
+    if (!haVisitadoContacto) continue;
 
-  const haVisitadoContacto = logs.some(
-    (l) => l.ip === ip && l.url.includes("contacto")
-  );
+    if (!contacto_csv.fecha_contacto) {
+      console.warn(`Contacto con email ${contacto_csv.email} no tiene fecha_contacto. Saltando...`);
+      continue;
+    }
 
-  if (!haVisitadoContacto) continue;
+    // Prevenir duplicado del lead
+    const leadExistente = enlace.registro_leads?.some(
+      (lead) =>
+        lead.contacto.toLowerCase().trim() ===
+        contacto_csv.email.toLowerCase().trim()
+    );
+    if (leadExistente) continue;
 
+    await EnlaceAfiliado.updateOne(
+      { _id: enlace._id },
+      {
+        $push: {
+          registro_leads: {
+            contacto: contacto_csv.email,
+            fecha_lead: contacto_csv.fecha_contacto,
+          },
+        },
+        $inc: { leads: 1 },
+      }
+    );
+  }
 
-if (!contacto_csv.fecha_contacto) {
-  console.warn(`Contacto con email ${contacto_csv.email} no tiene fecha_contacto. Saltando...`);
-  continue;
-}
-
-
-
-  // Prevenir duplicado del lead
-  const leadExistente = enlace.registro_leads?.some(
-    (lead) =>
-      lead.contacto.toLowerCase().trim() ===
-      contacto_csv.email.toLowerCase().trim()
-  );
-
-  if (leadExistente) continue;
-
-  enlace.registro_leads = enlace.registro_leads || [];
-  enlace.registro_leads.push({
-    contacto: contacto_csv.email,
-    fecha_lead: contacto_csv.fecha_contacto,
-  });
-  enlace.leads = (enlace.leads || 0) + 1;
-
-  await enlace.save();
-}
-
-
-
-  // contador de €
-  // un bucle for para recorrer todos los enlaces y mirar dentro de sus registro_leads y pasarle a la api de shopi ese correo y el momento en el que se hizo
-    // const enlace_tmp = await EnlaceAfiliado.findOne({ nombre_enlace: "probando fechas" });
-    // console.log(enlace_tmp)
   return {
     success: true,
   };
