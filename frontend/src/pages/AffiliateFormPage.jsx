@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 
@@ -10,18 +10,16 @@ function AffiliateFormPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors }, 
+    formState: { errors },
     formState: { Successes },
   } = useForm();
 
   const [utmLink, setUtmLink] = useState("");
   const {
-  createAffiliateLink,
-  errors: affiliate_linkErrors,
-  successes: affiliate_linkSuccesses,
-} = useAffiliateLinks();
-
-
+    createAffiliateLink,
+    errors: affiliate_linkErrors,
+    successes: affiliate_linkSuccesses,
+  } = useAffiliateLinks();
 
   const onSubmit = async (data) => {
     const { nombre_campaña, enlace_original } = data;
@@ -91,6 +89,17 @@ function AffiliateFormPage() {
             </p>
           </div>
         )}
+
+        <div >
+          <a
+            href="https://tamaritmotorcycles.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-blue-600 text-white text-sm py-3 rounded-md mb-4 text-center hover:bg-blue-800"
+          >
+            Ir a Tamarit
+          </a>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <input

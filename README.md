@@ -9,8 +9,8 @@ Este proyecto es una plataforma interna diseñada para gestionar un sistema de a
 - 🧾 Registro e inicio de sesión de afiliados
 - ✅ Verificación manual de usuarios por parte de administradores
 - 🔗 Generación de enlaces con parámetros UTM
-- 📈 Registro de visitas desde enlaces compartidos (proximamente...)
-- 🛒 Asociación de pedidos de Shopify mediante coincidencia de IP (proximamente...)
+- 📈 Registro de visitas desde enlaces compartidos
+- 🛒 Asociación de pedidos de Shopify mediante coincidencia de IP (en curso...)
 - 💸 Asignación de comisiones a afiliados por cada venta válida (proximamente...)
 - 🔐 Panel de administración para control de usuarios y estado
 
@@ -19,6 +19,6 @@ Este proyecto es una plataforma interna diseñada para gestionar un sistema de a
 - **Frontend**: React + Tailwind CSS + React Router
 - **Backend**: Node.js + Express + JWT
 - **Base de datos**: MongoDB (Mongoose)
-- **Integración externa**: Shopify (pedidos e IP)
-- **Tracking**: Logs del servidor con parámetros UTM
+- **Integración externa**: CMS privado de Tamarit y API de Shopify
+- **Tracking**: Logs del servidor con parámetros UTM, IP, timestamps, correos.
 
