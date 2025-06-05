@@ -13,12 +13,19 @@ export const findAndSaveMatches = async (formdata) => {
 
   const ipsAfiliadas = [];
 
-  // PRIMER BUCLE: VISITAS
+  // Mapa para acumular enlaces modificados
+  const enlacesModificados = new Map();
+
+  //----- PRIMER BUCLE: VISITAS -----
   for (const log of logs) {
     if (!log.enlace_utm) continue;
 
-    const enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
-    if (!enlace) continue;
+    let enlace = enlacesModificados.get(log.enlace_utm);
+    if (!enlace) {
+      enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
+      if (!enlace) continue;
+      enlacesModificados.set(log.enlace_utm, enlace);
+    }
 
     const logDate = new Date(log.fecha_log);
     const logTimestampSec = Math.floor(logDate.getTime() / 1000);
@@ -29,7 +36,7 @@ export const findAndSaveMatches = async (formdata) => {
 
     if (logTimestampSec < ultimaVisitaTimestampSec) continue;
 
-    const visitaExistente = enlace.registro_visitas.some((visita) => {
+    const visitaExistente = enlace.registro_visitas?.some((visita) => {
       const visitaTimestampSec = Math.floor(
         new Date(visita.timestamp).getTime() / 1000
       );
@@ -38,61 +45,55 @@ export const findAndSaveMatches = async (formdata) => {
 
     if (visitaExistente) continue;
 
-    await EnlaceAfiliado.updateOne(
-      { _id: enlace._id },
-      {
-        $push: {
-          registro_visitas: {
-            ip: log.ip,
-            timestamp: logDate,
-          },
-        },
-        $inc: { visitas: 1 },
-        $set: { ultima_visita: logDate },
-      }
-    );
+    enlace.registro_visitas = enlace.registro_visitas || [];
+    enlace.registro_visitas.push({
+      ip: log.ip,
+      timestamp: logDate,
+    });
 
-    ipsAfiliadas.push({ ip: log.ip, fecha_log: logDate, enlace });
-  }
+    enlace.visitas = (enlace.visitas || 0) + 1;
 
-  // SEGUNDO BUCLE: LEADS
-  for (const contacto_csv of contactos_csv) {
-    const ip = contacto_csv.ip;
-    const enlaceMatch = ipsAfiliadas.find((item) => item.ip === ip);
-    if (!enlaceMatch) continue;
-
-    const { enlace } = enlaceMatch;
-
-    const haVisitadoContacto = logs.some(
-      (l) => l.ip === ip && l.url.includes("contacto")
-    );
-    if (!haVisitadoContacto) continue;
-
-    if (!contacto_csv.fecha_contacto) {
-      console.warn(`Contacto con email ${contacto_csv.email} no tiene fecha_contacto. Saltando...`);
-      continue;
+    if (logTimestampSec > ultimaVisitaTimestampSec) {
+      enlace.ultima_visita = logDate;
     }
 
-    // Prevenir duplicado del lead
-    const leadExistente = enlace.registro_leads?.some(
-      (lead) =>
-        lead.contacto.toLowerCase().trim() ===
-        contacto_csv.email.toLowerCase().trim()
-    );
-    if (leadExistente) continue;
+    ipsAfiliadas.push({ ip: log.ip, fecha_log: logDate, enlace_utm: log.enlace_utm });
+  }
 
-    await EnlaceAfiliado.updateOne(
-      { _id: enlace._id },
-      {
-        $push: {
-          registro_leads: {
-            contacto: contacto_csv.email,
-            fecha_lead: contacto_csv.fecha_contacto,
-          },
-        },
-        $inc: { leads: 1 },
-      }
+  //----- SEGUNDO BUCLE: LEADS -----
+  for (const { ip, fecha_log, enlace_utm } of ipsAfiliadas) {
+    const enlace = enlacesModificados.get(enlace_utm);
+    if (!enlace) continue;
+
+    const logsContactoMismaIP = logs.filter(
+      (l) => l.ip === ip && l.url.includes("contacto")
     );
+
+    if (logsContactoMismaIP.length === 0) continue;
+
+    for (const contacto_csv of contactos_csv) {
+      const fechaContacto = new Date(contacto_csv.fecha_contacto);
+      if (ip === contacto_csv.ip && fechaContacto >= fecha_log) {
+        const email = contacto_csv.email.toLowerCase().trim();
+
+        const leadExistente = enlace.registro_leads?.some(
+          (lead) => lead.contacto.toLowerCase().trim() === email
+        );
+        if (leadExistente) continue;
+
+        enlace.registro_leads = enlace.registro_leads || [];
+        enlace.registro_leads.push({
+          contacto: contacto_csv.email,
+          fecha_lead: contacto_csv.fecha_contacto,
+        });
+        enlace.leads = (enlace.leads || 0) + 1;
+      }
+    }
+  }
+
+  //----- GUARDAR CAMBIOS EN TODOS LOS ENLACES -----
+  for (const enlace of enlacesModificados.values()) {
+    await enlace.save();
   }
 
   return {

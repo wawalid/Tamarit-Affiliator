@@ -7,7 +7,7 @@ export function parseContactCSV(csvText) {
   });
 
   const contactos = [];
-  const fechaMinima = new Date("2025-06-04");
+  const fechaMinima = new Date("2025-06-05");
 
   for (const row of records) {
     const fechaContacto = new Date(row["Fecha"]);
@@ -24,6 +24,6 @@ export function parseContactCSV(csvText) {
     contactos.push(contacto);
   }
 
-  // console.log("contactos parseados:", contactos);
+  console.log("contactos parseados:", contactos);
   return contactos;
 }
