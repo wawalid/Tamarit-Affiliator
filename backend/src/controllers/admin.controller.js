@@ -1,6 +1,7 @@
 import { parseCMSLogs } from "../utils/parsecmslogs.js";
 import { parseContactCSV } from "../utils/parseContactCSV.js";
 import EnlaceAfiliado from "../models/affiliate_link.model.js";
+import { actualizarFechasSistema } from "../controllers/system_info.controller.js";
 
 export const findAndSaveMatches = async (formdata) => {
   const { logs_raw, contactos_raw } = formdata;
@@ -28,7 +29,9 @@ export const findAndSaveMatches = async (formdata) => {
     if (!enlace) {
       enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
       if (!enlace) {
-        console.log(`[VISITAS] Enlace no encontrado para UTM: ${log.enlace_utm}`);
+        console.log(
+          `[VISITAS] Enlace no encontrado para UTM: ${log.enlace_utm}`
+        );
         continue;
       }
       enlacesModificados.set(log.enlace_utm, enlace);
@@ -70,9 +73,15 @@ export const findAndSaveMatches = async (formdata) => {
       enlace.ultima_visita = logDate;
     }
 
-    console.log(`[VISITAS] Visita añadida - IP: ${log.ip}, Enlace: ${log.enlace_utm}`);
+    console.log(
+      `[VISITAS] Visita añadida - IP: ${log.ip}, Enlace: ${log.enlace_utm}`
+    );
 
-    ipsAfiliadas.push({ ip: log.ip, fecha_log: logDate, enlace_utm: log.enlace_utm });
+    ipsAfiliadas.push({
+      ip: log.ip,
+      fecha_log: logDate,
+      enlace_utm: log.enlace_utm,
+    });
   }
 
   //----- SEGUNDO BUCLE: LEADS -----
@@ -80,7 +89,9 @@ export const findAndSaveMatches = async (formdata) => {
   for (const { ip, fecha_log, enlace_utm } of ipsAfiliadas) {
     const enlace = enlacesModificados.get(enlace_utm);
     if (!enlace) {
-      console.log(`[LEADS] Enlace no encontrado en memoria para UTM: ${enlace_utm}`);
+      console.log(
+        `[LEADS] Enlace no encontrado en memoria para UTM: ${enlace_utm}`
+      );
       continue;
     }
 
@@ -89,7 +100,9 @@ export const findAndSaveMatches = async (formdata) => {
     );
 
     if (logsContactoMismaIP.length === 0) {
-      console.log(`[LEADS] No se encontraron páginas de contacto para IP: ${ip}`);
+      console.log(
+        `[LEADS] No se encontraron páginas de contacto para IP: ${ip}`
+      );
       continue;
     }
 
@@ -132,6 +145,29 @@ export const findAndSaveMatches = async (formdata) => {
   }
 
   console.log("[FINALIZADO] Proceso completado correctamente.");
+
+
+  
+  // Actualizar fechas del sistema
+  const ultimoLog = logs[logs.length - 1];
+
+  if (ultimoLog) {
+    const systemMeta = await actualizarFechasSistema(
+      new Date(ultimoLog.fecha_log)
+    );
+    console.log(
+      "Última fecha de log actualizada en el sistema:",
+      systemMeta.admin_fecha_ultimo_log
+    );
+    console.log(
+      "Fecha de última actualización:",
+      systemMeta.admin_fecha_ultima_actualizacion
+    );
+  } else {
+    console.warn(
+      "[ADVERTENCIA] No se encontraron logs para actualizar la fecha del sistema."
+    );
+  }
 
   return {
     success: true,

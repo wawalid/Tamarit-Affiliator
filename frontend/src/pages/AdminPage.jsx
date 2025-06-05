@@ -1,21 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { format } from "date-fns";
+import { format, subMinutes } from "date-fns";
 import { Link } from "react-router-dom";
+import { parse, subHours  } from "date-fns";
+
 
 function AdminPage() {
-  const { getUsers, users, toggleVerificado, match } = useAuth();
+  const { getUsers, users, toggleVerificado, match, getSystemInfo } = useAuth();
   const [cmsLogFile, setCmsLogFile] = useState(null);
   const [contactFyle, setContactFyle] = useState(null);
   const [matchResult, setMatchResult] = useState(null);
+  const [ultimaActualizacion, setUltimaActualizacion] = useState(null);
+  const [ultimoLog, setUltimoLog] = useState(null);
 
   useEffect(() => {
     getUsers();
   }, []);
 
+useEffect(() => {
+  getSystemInfo()
+    .then(data => {
+      if (data) {
+        const ajustadaActualizacion = subHours(new Date(data.admin_fecha_ultima_actualizacion), 2);
+        const ajustadoLog = subHours(new Date(data.admin_fecha_ultimo_log), 2);
+
+        setUltimaActualizacion(ajustadaActualizacion);
+        setUltimoLog(ajustadoLog);
+      }
+    })
+    .catch(err => console.error("Error al cargar info sistema:", err));
+}, []);
+
+
   const handleFileUpload = async () => {
     if (!cmsLogFile || !contactFyle) {
-      setMatchResult({ success: false, message: "Por favor, selecciona ambos archivos." });
+      setMatchResult({
+        success: false,
+        message: "Por favor, selecciona ambos archivos.",
+      });
       return;
     }
 
@@ -26,12 +48,17 @@ function AdminPage() {
     try {
       const respuesta = await match(formData);
       setMatchResult(respuesta);
+      if (respuesta.success) {
+        setUltimaActualizacion(new Date());
+      }
+
       console.log("Archivos procesados correctamente", respuesta);
     } catch (error) {
       console.error("Error al procesar archivos:", error);
       setMatchResult({
         success: false,
-        message: error.response?.data?.message || "Error al procesar los archivos.",
+        message:
+          error.response?.data?.message || "Error al procesar los archivos.",
       });
     }
   };
@@ -44,7 +71,9 @@ function AdminPage() {
         </h1>
         <div className="overflow-x-auto">
           {users.length === 0 ? (
-            <p className="text-white text-center">No hay usuarios disponibles</p>
+            <p className="text-white text-center">
+              No hay usuarios disponibles
+            </p>
           ) : (
             <table className="min-w-full bg-zinc-800 text-white rounded shadow-lg">
               <thead>
@@ -57,9 +86,15 @@ function AdminPage() {
               </thead>
               <tbody>
                 {users.map((user, index) => (
-                  <tr key={index} className="border-t border-zinc-700 hover:bg-zinc-600">
+                  <tr
+                    key={index}
+                    className="border-t border-zinc-700 hover:bg-zinc-600"
+                  >
                     <td className="py-3 px-4">
-                      <Link to={`/user/${user._id}`} className="text-blue-400 hover:underline">
+                      <Link
+                        to={`/user/${user._id}`}
+                        className="text-blue-400 hover:underline"
+                      >
                         {user.fullname}
                       </Link>
                     </td>
@@ -73,10 +108,15 @@ function AdminPage() {
                         {user.is_verified ? "Sí" : "No"}
                       </button>
                     </td>
-                    <td className="py-3 px-4">{user.completado ? "Sí" : "No"}</td>
+                    <td className="py-3 px-4">
+                      {user.completado ? "Sí" : "No"}
+                    </td>
                     <td className="py-3 px-4">
                       {user.fecha_registro
-                        ? format(new Date(user.fecha_registro), "dd/MM/yyyy HH:mm")
+                        ? format(
+                            new Date(user.fecha_registro),
+                            "dd/MM/yyyy HH:mm"
+                          )
                         : "Fecha no disponible"}
                     </td>
                   </tr>
@@ -116,7 +156,11 @@ function AdminPage() {
 
         {/* Resultado del procesamiento */}
         {matchResult && (
-          <div className={`mt-4 p-4 rounded ${matchResult.success ? "bg-green-700" : "bg-red-700"}`}>
+          <div
+            className={`mt-4 p-4 rounded ${
+              matchResult.success ? "bg-green-700" : "bg-red-700"
+            }`}
+          >
             <p className="font-semibold">{matchResult.message}</p>
             {matchResult.success && (
               <ul className="mt-2 list-disc list-inside text-sm">
@@ -125,6 +169,22 @@ function AdminPage() {
             )}
           </div>
         )}
+        <div className={`mt-4 p-4 rounded bg-zinc-700`}>
+          <div className={`mt-4 p-4 rounded bg-zinc-700`}>
+            <p className="font-semibold">
+              Última actualización:{" "}
+              {ultimaActualizacion
+                ? format(ultimaActualizacion, "dd/MM/yyyy HH:mm:ss")
+                : "Aún no se ha actualizado"}
+            </p>
+            <p className="font-semibold">
+              Último log registrado:{" "}
+              {ultimoLog
+                ? format(ultimoLog, "dd/MM/yyyy HH:mm:ss")
+                : "Aún no se ha registrado ningún log"}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

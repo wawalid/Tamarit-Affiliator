@@ -9,14 +9,15 @@ import affiliateLinksRoutes from "./routes/affiliate_links.routes.js";
 import accessoryRoutes from "./routes/accessory.routes.js";
 import usersRoutes from "./routes/users.routes.js"
 import adminRoutes from "./routes/admin.routes.js";
+import systemInfoRoutes from "./routes/system_info.routes.js";
 
 const app = express();
 
 // 👇 Añade aquí tu dominio de frontend en producción
 const allowedOrigins = [
   "http://localhost:5173",
-  // "http://192.168.1.146:5173",
-  "http://192.168.0.27:5173",
+  "http://192.168.1.146:5173",
+  // "http://192.168.0.27:5173",
   "https://front-production-aa1f.up.railway.app" // <-- ¡este es el que faltaba!
 ];
 
@@ -42,5 +43,6 @@ app.use("/api", affiliateLinksRoutes);
 app.use("/api", accessoryRoutes);
 app.use("/api", usersRoutes);
 app.use("/api", adminRoutes);
+app.use("/api", systemInfoRoutes);
 
 export default app;

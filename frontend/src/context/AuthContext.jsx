@@ -9,6 +9,8 @@ import {
 } from "../api/auth";
 import { getUsersRequest,getUserByIdRequest, updateVerifiedUserRequest } from "../api/users";
 import { matchRequest } from "../api/admin";
+import { getSystemInfoRequest } from "../api/system_info";
+
 
 export const AuthContext = createContext();
 
@@ -120,6 +122,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  const getSystemInfo = async () => {
+    try {
+      const res = await getSystemInfoRequest();
+      console.log("Información del sistema:", res.data);
+      return res.data;
+    } catch (error) {
+      console.error("Error al obtener información del sistema:", error);
+      throw error;
+    }
+  };
+
+
+
+
   // Borrar los mensajes de error y éxito después de 5 segundos
   useEffect(() => {
     if (errors.length > 0) {
@@ -174,6 +191,7 @@ export const AuthProvider = ({ children }) => {
         getUserbyID,
         toggleVerificado,
         match,
+        getSystemInfo,
         loading,
         user,
         affiliateUser,
