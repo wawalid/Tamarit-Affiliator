@@ -21,7 +21,6 @@ export const createAffiliateLink = async (req, res) => {
     res.status(201).json(savedEnlace);
     
   } catch (error) {
-    // ⚠️ Duplicado por índice compuesto user + enlace_utm
     if (error.code === 11000) {
       return res.status(400).json(["Ya has creado un enlace similar a ese. Usa uno distinto."]);
     }

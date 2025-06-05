@@ -4,7 +4,6 @@ import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 import { useAuth } from "../context/AuthContext";
 import InfoCard from "../components/InfoCard";
 
-
 function UserDetailPage() {
   const { id } = useParams();
   const { getAffiliateLinkbyId, affiliate_links, loading, errors } =
@@ -25,7 +24,8 @@ function UserDetailPage() {
     <div className="p-8 text-white">
       <div className="mb-10">
         <h1 className="text-3xl font-bold mb-6">
-          Información personal de {affiliateUser?.fullname || "usuario desconocido"}
+          Información personal de{" "}
+          {affiliateUser?.fullname || "usuario desconocido"}
         </h1>
         {affiliateUser && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-zinc-800 p-6 rounded shadow-md">
@@ -34,7 +34,10 @@ function UserDetailPage() {
             <InfoCard label="DNI" value={affiliateUser.dni} />
             <InfoCard label="ID Afiliado" value={affiliateUser.id_afiliado} />
             <InfoCard label="Identidad" value={affiliateUser.identidad} />
-            <InfoCard label="Cuenta bancaria" value={affiliateUser.cuenta_bancaria} />
+            <InfoCard
+              label="Cuenta bancaria"
+              value={affiliateUser.cuenta_bancaria}
+            />
             <InfoCard label="RRSS 1" value={affiliateUser.rrss_1} />
             <InfoCard label="RRSS 2" value={affiliateUser.rrss_2} />
             <InfoCard label="RRSS 3" value={affiliateUser.rrss_3} />
@@ -42,7 +45,9 @@ function UserDetailPage() {
         )}
       </div>
 
-      <h2 className="text-2xl font-bold mb-4">Enlaces de afiliado del usuario</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        Enlaces de afiliado del usuario
+      </h2>
 
       {loading ? (
         <p>Cargando enlaces...</p>
@@ -81,12 +86,25 @@ function UserDetailPage() {
                   </a>
                 </td>
                 <td className="py-2 px-4">{link.visitas}</td>
-                <td className="py-2 px-4">{link.leads}</td>
+                <td
+                  className="py-2 px-4"
+                  onClick={() => {
+                    const contactos =
+                      link.registro_leads
+                        ?.map((lead) => lead.contacto)
+                        .join("\n") || "Sin contactos";
+                    alert(`Leads:\n${contactos}`);
+                  }}
+                >
+                  {link.leads}
+                </td>
                 <td className="py-2 px-4">
                   {link.comision != null ? `${link.comision} €` : "—"}
                 </td>
                 <td className="py-2 px-4">
-                  {link.total_generado != null ? `${link.total_generado} €` : "—"}
+                  {link.total_generado != null
+                    ? `${link.total_generado} €`
+                    : "—"}
                 </td>
               </tr>
             ))}
