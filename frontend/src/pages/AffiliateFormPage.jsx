@@ -125,11 +125,29 @@ function AffiliateFormPage() {
         </form>
 
         {utmLink && (
-          <div className="mt-4">
-            <p className="font-semibold">Enlace generado:</p>
-            <code className="text-sm break-words">{utmLink}</code>
-          </div>
-        )}
+  <div className="mt-4">
+    <p className="font-semibold mb-2">Enlace generado:</p>
+
+    <a
+      href={utmLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block bg-zinc-700 text-white text-sm font-mono px-3 py-2 rounded break-words"
+    >
+      {utmLink}
+    </a>
+
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(utmLink);
+      }}
+      className="mt-2 bg-blue-600 text-white text-xs px-4 py-1.5 rounded hover:bg-blue-700"
+    >
+      Copiar enlace
+    </button>
+  </div>
+)}
+
       </div>
     </div>
   );
