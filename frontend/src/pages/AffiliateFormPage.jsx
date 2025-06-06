@@ -53,17 +53,12 @@ function AffiliateFormPage() {
       <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md m-2">
         {errors.nombre_campaña && (
           <div className="bg-red-500 p-2 text-white my-2">
-            El nombre de campaña es obligatorio.
+            The campaign name is required.
           </div>
         )}
         {errors.enlace_original && (
           <div className="bg-red-500 p-2 text-white my-2">
-            El enlace original es obligatorio.
-          </div>
-        )}
-        {errors.codigo_descuento && (
-          <div className="bg-red-500 p-2 text-white my-2">
-            El código de descuento es obligatorio.
+            The original link is required and must be a valid URL.
           </div>
         )}
 
@@ -79,13 +74,13 @@ function AffiliateFormPage() {
         ))}
 
         <h1 className="text-xl font-bold mb-4 text-center">
-          Generar Enlace de afiliado
+          Generate Affiliate Link
         </h1>
 
         {user?.id_afiliado && (
           <div className="bg-green-700 text-white text-sm py-3 rounded-md mb-4 text-center">
             <p>
-              <strong>Tu código de afiliado:</strong> {user.id_afiliado}
+              <strong>Your affiliate code:</strong> {user.id_afiliado}
             </p>
           </div>
         )}
@@ -97,7 +92,7 @@ function AffiliateFormPage() {
             rel="noopener noreferrer"
             className="block bg-blue-600 text-white text-sm py-3 rounded-md mb-4 text-center hover:bg-blue-800"
           >
-            Ir a Tamarit
+            Go to Tamarit
           </a>
         </div>
 
@@ -105,14 +100,14 @@ function AffiliateFormPage() {
           <input
             type="text"
             {...register("nombre_campaña", { required: true })}
-            placeholder="Nombre de campaña"
+            placeholder="Campaign name"
             className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
           />
 
           <input
             type="url"
             {...register("enlace_original", { required: true })}
-            placeholder="Enlace original"
+            placeholder="Tamarit link"
             className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
           />
 
@@ -120,13 +115,13 @@ function AffiliateFormPage() {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md my-2"
           >
-            Generar enlace
+            Generate Link
           </button>
         </form>
 
         {utmLink && (
   <div className="mt-4">
-    <p className="font-semibold mb-2">Enlace generado:</p>
+    <p className="font-semibold mb-2">Generated link:</p>
 
     <a
       href={utmLink}
@@ -143,7 +138,7 @@ function AffiliateFormPage() {
       }}
       className="mt-2 bg-blue-600 text-white text-xs px-4 py-1.5 rounded hover:bg-blue-700"
     >
-      Copiar enlace
+      Copy link
     </button>
   </div>
 )}

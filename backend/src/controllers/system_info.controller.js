@@ -5,16 +5,16 @@ export const actualizarFechasSistema = async (fechaUltimoLog) => {
   const meta = await System_info.findOne();
 
   const fechaLocal = new Date();
-  const fechamodificada = add(fechaLocal, { hours: 2 });
+  // const fechamodificada = add(fechaLocal, { hours: 2 });
 
   if (!meta) {
     const nuevoMeta = await System_info.create({
-      admin_fecha_ultima_actualizacion: fechamodificada,
+      admin_fecha_ultima_actualizacion: fechaLocal,
       admin_fecha_ultimo_log: fechaUltimoLog,
     });
     return nuevoMeta;
   } else {
-    meta.admin_fecha_ultima_actualizacion = fechamodificada;
+    meta.admin_fecha_ultima_actualizacion = fechaLocal;
     meta.admin_fecha_ultimo_log = fechaUltimoLog;
     await meta.save();
     return meta;

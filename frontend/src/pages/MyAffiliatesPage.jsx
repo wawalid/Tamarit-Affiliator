@@ -1,6 +1,5 @@
 import { useAffiliateLinks } from "../context/Affiliate_linksContext";
 import { useEffect } from "react";
-import Affiliate_linkCard from "../components/Affiliate_linkCard";
 import { useAuth } from "../context/AuthContext";
 import InfoCard from "../components/InfoCard";
 
@@ -28,24 +27,24 @@ function MyAffiliatesPage() {
       <div>
                 {user && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-zinc-800 p-6 rounded shadow-md">
-            <InfoCard label="Nombre completo" value={user.fullname} />
+            <InfoCard label="Fullname" value={user.fullname} />
             <InfoCard label="Email" value={user.email} />
             <InfoCard label="DNI" value={user.dni} />
-            <InfoCard label="ID Afiliado" value={user.id_afiliado} />
-            <InfoCard label="Identidad" value={user.identidad} />
-            <InfoCard label="Cuenta bancaria" value={user.cuenta_bancaria} />
-            <InfoCard label="RRSS 1" value={user.rrss_1} />
-            <InfoCard label="RRSS 2" value={user.rrss_2} />
-            <InfoCard label="RRSS 3" value={user.rrss_3} />
+            <InfoCard label="Affiliate ID" value={user.id_afiliado} />
+            <InfoCard label="Bank name" value={user.identidad} />
+            <InfoCard label="Bank account" value={user.cuenta_bancaria} />
+            <InfoCard label="Social media 1" value={user.rrss_1} />
+            <InfoCard label="Social media 2" value={user.rrss_2} />
+            <InfoCard label="Social media 3" value={user.rrss_3} />
           </div>
         )}
       </div>
         <table className="min-w-full bg-zinc-800 rounded shadow-lg mt-4">
           <thead>
             <tr className="bg-zinc-700 text-left">
-              <th className="py-2 px-4">Nombre</th>
-              <th className="py-2 px-4">UTM</th>
-              <th className="py-2 px-4">Visitas</th>
+              <th className="py-2 px-4">Name</th>
+              <th className="py-2 px-4">URL</th>
+              <th className="py-2 px-4">Visits</th>
               <th className="py-2 px-4">Leads</th>
               <th className="py-2 px-4">Comisión</th>
               <th className="py-2 px-4">Total</th>
@@ -62,7 +61,7 @@ function MyAffiliatesPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    UTM
+                    URL
                   </a>
                 </td>
                 <td className="py-2 px-4">{link.visitas}</td>

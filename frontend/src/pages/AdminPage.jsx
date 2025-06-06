@@ -62,27 +62,27 @@ useEffect(() => {
       });
     }
   };
-  
+
 
   return (
     <div className="p-8 flex gap-8">
       <div className="w-2/3">
         <h1 className="text-center text-2xl font-bold mb-8 text-white">
-          Administrar usuarios
+          Manage users
         </h1>
         <div className="overflow-x-auto">
           {users.length === 0 ? (
             <p className="text-white text-center">
-              No hay usuarios disponibles
+              No users available. Please check back later.
             </p>
           ) : (
             <table className="min-w-full bg-zinc-800 text-white rounded shadow-lg">
               <thead>
                 <tr className="bg-zinc-700 text-left">
-                  <th className="py-3 px-4">Usuario</th>
-                  <th className="py-3 px-4">Verificado</th>
-                  <th className="py-3 px-4">Completado</th>
-                  <th className="py-3 px-4">Fecha de Registro</th>
+                  <th className="py-3 px-4">User</th>
+                  <th className="py-3 px-4">Verified</th>
+                  <th className="py-3 px-4">Completed</th>
+                  <th className="py-3 px-4">Registration Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -106,7 +106,7 @@ useEffect(() => {
                           user.is_verified ? "bg-green-600" : "bg-red-600"
                         } hover:opacity-80`}
                       >
-                        {user.is_verified ? "Sí" : "No"}
+                        {user.is_verified ? "Yes" : "No"}
                       </button>
                     </td>
                     <td className="py-3 px-4">
@@ -129,7 +129,7 @@ useEffect(() => {
       </div>
 
       <div className="w-1/3 bg-zinc-800 text-white p-6 rounded shadow-lg h-fit">
-        <h2 className="text-xl font-semibold mb-4">Subir archivos</h2>
+        <h2 className="text-xl font-semibold mb-4">Upload files</h2>
         <div className="mb-4">
           <label className="block mb-1">Logs CMS (access):</label>
           <input
@@ -140,7 +140,7 @@ useEffect(() => {
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-1">Contactos (CSV):</label>
+          <label className="block mb-1">Contacts (CSV):</label>
           <input
             type="file"
             accept=".csv"
@@ -152,7 +152,7 @@ useEffect(() => {
           onClick={handleFileUpload}
           className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold"
         >
-          Subir archivos
+          Upload files
         </button>
 
         {/* Resultado del procesamiento */}
@@ -173,16 +173,16 @@ useEffect(() => {
         <div className={`mt-4 p-4 rounded bg-zinc-700`}>
           <div className={`mt-4 p-4 rounded bg-zinc-700`}>
             <p className="font-semibold">
-              Última actualización:{" "}
+              Last update:{" "}
               {ultimaActualizacion
                 ? format(ultimaActualizacion, "dd/MM/yyyy HH:mm:ss")
-                : "Aún no se ha actualizado"}
+                : "Has not yet been updated"}
             </p>
             <p className="font-semibold">
-              Último log registrado:{" "}
+              Last log update:{" "}
               {ultimoLog
                 ? format(ultimoLog, "dd/MM/yyyy HH:mm:ss")
-                : "Aún no se ha registrado ningún log"}
+                : "No logs have been recorded yet."}
             </p>
           </div>
         </div>

@@ -71,7 +71,7 @@ function ProfilePage() {
         <div className="flex flex-col items-center justify-center bg-zinc-900 text-white space-y-4 p-4">
           <div className="bg-zinc-800 max-w-md w-full p-8 rounded-md shadow-md m-2">
             <h2 className="text-2xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 animate-pulse">
-              ¡Bienvenido, {user.fullname}!
+              Welcome, {user.fullname}!
             </h2>
             {profileErrors.map((error, i) => (
               <div className="bg-red-500 p-2 text-white my-2" key={i}>
@@ -130,15 +130,15 @@ function ProfilePage() {
                 placeholder="Your Social network link (Optional)"
               />
 
-              <h2>Datos bancarios</h2>
+              <h2>Bank details</h2>
               <input
                 type="text"
                 {...register("identidad", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-                placeholder="Identidad"
+                placeholder="Bank name"
               />
               {errors.identidad && (
-                <p className="text-red-500">Identidad is required</p>
+                <p className="text-red-500">Bank name is required</p>
               )}
               <input
                 type="text"
@@ -151,17 +151,17 @@ function ProfilePage() {
                 type="text"
                 {...register("cuenta_bancaria", { required: true })}
                 className="w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2"
-                placeholder="Cuenta bancaria"
+                placeholder="IBAN"
               />
               {errors.cuenta_bancaria && (
-                <p className="text-red-500">Cuenta bancaria is required</p>
+                <p className="text-red-500">IBAN is required</p>
               )}
 
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded-md my-2"
               >
-                Guardar
+                Save
               </button>
             </form>
           </div>

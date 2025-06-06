@@ -61,15 +61,15 @@ export const profileSchema = z.object({
     .optional(), // Optional field, only used if the user wants to update the password
 
   cuenta_bancaria: z
-    .string({ required_error: "Cuenta bancaria es requerida" })
-    .min(15, { message: "Cuenta bancaria demasiado corta" })
-    .max(34, { message: "Cuenta bancaria demasiado larga" })
-    .regex(/^([A-Z]{2}\d{2}[A-Z0-9]{11,30})$/, { message: "IBAN inválido" }),
+    .string({ required_error: "Bank account is required" })
+    .min(15, { message: "Bank account too short" })
+    .max(34, { message: "Bank account too long" })
+    .regex(/^([A-Z]{2}\d{2}[A-Z0-9]{11,30})$/, { message: "IBAN not valid" }),
   identidad: z
-    .string({ required_error: "Identidad es requerida" })
-    .min(4, { message: "Identidad demasiado corta" })
-    .max(100, { message: "Identidad demasiado larga" }),
+    .string({ required_error: "Bank name is required" })
+    .min(4, { message: "Bank name too short" })
+    .max(100, { message: "Bank name too long" }),
   dni: z
-    .string({ required_error: "DNI es requerido" })
-    .regex(/^\d{8}[A-Z]$/, { message: "DNI inválido" }),
+    .string({ required_error: "DNI is required" })
+    .regex(/^\d{8}[A-Z]$/, { message: "DNI not valid" }),
 });

@@ -153,8 +153,8 @@ export const findAndSaveMatches = async (formdata) => {
 
   if (ultimoLog) {
     const systemMeta = await actualizarFechasSistema(
-      new Date(ultimoLog.fecha_log)
-    );
+      new Date(ultimoLog.fecha_log)   // puede estar aqui el problemilla/bug
+);
     console.log(
       "Última fecha de log actualizada en el sistema:",
       systemMeta.admin_fecha_ultimo_log

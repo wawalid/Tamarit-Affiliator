@@ -20,31 +20,31 @@ function Navbar() {
 
             {user && !user.is_verified && (
               <li>
-                <span className="text-red-500">Usuario no verificado</span>
+                <span className="text-red-500">User not verified</span>
               </li>
             )}
             {user && !user.completado && (
               <li>
-                <span className="text-red-500">Complete su perfil</span>
+                <span className="text-red-500">Complete your profile</span>
               </li>
             )}
             {user.is_admin && (
               <li>
-                <Link to={"/admin_page"}>Panel admin</Link>
+                <Link to={"/admin_page"}>Admin panel</Link>
               </li>
             )}
             {user && !user.is_admin && (
               <>
                 <li>
-                  <Link to={"/create-affiliate-link"}>Crear afiliado</Link>
+                  <Link to={"/create-affiliate-link"}>Create affiliate</Link>
                 </li>
                 <li>
-                  <Link to={"/my-affiliates"}>Afiliaciones</Link>
+                  <Link to={"/my-affiliates"}>Affiliations</Link>
                 </li>
               </>
             )}
             <li>
-              <Link to={"/profile"}>Perfil</Link>
+              <Link to={"/profile"}>Profile</Link>
             </li>
             <li>
               <Link
