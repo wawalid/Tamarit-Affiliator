@@ -50,6 +50,6 @@ const afiliadoSchema = new mongoose.Schema(
   }
 );
 
-afiliadoSchema.index({ user: 1, enlace_original: 1 }, { unique: true });
+// afiliadoSchema.index({ user: 1, enlace_original: 1 }, { unique: true });
 
 export default mongoose.model("EnlaceAfiliado", afiliadoSchema);
