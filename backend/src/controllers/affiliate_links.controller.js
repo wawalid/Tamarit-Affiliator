@@ -21,9 +21,9 @@ export const createAffiliateLink = async (req, res) => {
     res.status(201).json(savedEnlace);
     
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json(["Ya has creado un enlace similar a ese. Usa uno distinto."]);
-    }
+    // if (error.code === 11000) {
+    //   return res.status(400).json(["Ya has creado un enlace similar a ese. Usa uno distinto."]);
+    // }
 
     // Otros errores
     console.error(error);
