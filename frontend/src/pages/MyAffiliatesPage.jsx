@@ -46,7 +46,7 @@ function MyAffiliatesPage() {
               <th className="py-2 px-4">URL</th>
               <th className="py-2 px-4">Visits</th>
               <th className="py-2 px-4">Leads</th>
-              <th className="py-2 px-4">Comisión</th>
+              <th className="py-2 px-4">Commission</th>
               <th className="py-2 px-4">Total</th>
             </tr>
           </thead>

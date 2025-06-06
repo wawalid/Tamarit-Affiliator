@@ -16,14 +16,14 @@ const app = express();
 // 👇 Añade aquí tu dominio de frontend en producción
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://192.168.1.146:5173",
-  // "http://192.168.0.27:5173",
-  "https://front-production-aa1f.up.railway.app" // <-- ¡este es el que faltaba!
+  // "http://192.168.1.146:5173",
+  "http://192.168.0.27:5173",
+  "https://front-production-aa1f.up.railway.app"
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true); // permite herramientas como Postman
+    if (!origin) return callback(null, true); 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {

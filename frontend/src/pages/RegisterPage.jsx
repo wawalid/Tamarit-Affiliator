@@ -21,7 +21,7 @@ function RegisterPage() {
   });
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen animated-bg">
       <div className="bg-zinc-800 max-w-md w-full p-10 rounded-md">
         {/* <h1 className="text-2xl text-white">Register</h1> */}
         <img src="../../media/tmrt-logo_480_prueba.png" alt="" className="" />
