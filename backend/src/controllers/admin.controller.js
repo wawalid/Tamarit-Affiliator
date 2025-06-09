@@ -18,26 +18,20 @@ export const findAndSaveMatches = async (formdata) => {
   console.log(`[CONTACTOS] Total: ${contactos_csv.length}`);
 
   const ipsAfiliadas = [];
-  const enlacesModificados = new Map();
 
   //----- PRIMER BUCLE: VISITAS -----
   console.log("[VISITAS] Iniciando análisis de visitas");
   for (const log of logs) {
     if (!log.enlace_utm) continue;
 
-    let enlace = enlacesModificados.get(log.enlace_utm);
+    const enlace = await EnlaceAfiliado.findOne({
+      id_afiliado: log.id_afiliado,
+      nombre_enlace: log.utm_campaign,
+    });
+
     if (!enlace) {
-      enlace = await EnlaceAfiliado.findOne({
-        id_afiliado: log.id_afiliado,
-        nombre_enlace: log.utm_campaign,
-      });
-      if (!enlace) {
-        console.log(
-          `[VISITAS] Enlace no encontrado para UTM: ${log.enlace_utm}`
-        );
-        continue;
-      }
-      enlacesModificados.set(log.enlace_utm, enlace);
+      console.log(`[VISITAS] Enlace no encontrado para UTM: ${log.enlace_utm}`);
+      continue;
     }
 
     const logDate = new Date(log.fecha_log);
@@ -48,37 +42,34 @@ export const findAndSaveMatches = async (formdata) => {
       : 0;
 
     if (logTimestampSec < ultimaVisitaTimestampSec) {
-      console.log(`[VISITAS] Visita antigua ignorada para IP ${log.ip}`);
+      console.log(`[VISITAS] Visita antigua ignorada para IP ${log.ip} ${log.fecha_log}`);
       continue;
     }
 
-    const visitaExistente = enlace.registro_visitas?.some((visita) => {
-      const visitaTimestampSec = Math.floor(
-        new Date(visita.timestamp).getTime() / 1000
-      );
+    const visitaDuplicada = enlace.registro_visitas?.some((visita) => {
+      const visitaTimestampSec = Math.floor(new Date(visita.timestamp).getTime() / 1000);
       return visita.ip === log.ip && visitaTimestampSec === logTimestampSec;
     });
 
-    if (visitaExistente) {
+    if (visitaDuplicada) {
       console.log(`[VISITAS] Visita duplicada ignorada para IP ${log.ip}`);
       continue;
     }
 
-    enlace.registro_visitas = enlace.registro_visitas || [];
-    enlace.registro_visitas.push({
-      ip: log.ip,
-      timestamp: logDate,
-    });
-
-    enlace.visitas = (enlace.visitas || 0) + 1;
-
-    if (logTimestampSec > ultimaVisitaTimestampSec) {
-      enlace.ultima_visita = logDate;
-    }
-
-    console.log(
-      `[VISITAS] Visita añadida - IP: ${log.ip}, Enlace: ${log.enlace_utm}`
+    await EnlaceAfiliado.updateOne(
+      { _id: enlace._id },
+      {
+        $push: {
+          registro_visitas: { ip: log.ip, timestamp: logDate },
+        },
+        $inc: { visitas: 1 },
+        ...(logTimestampSec > ultimaVisitaTimestampSec && {
+          $set: { ultima_visita: logDate },
+        }),
+      }
     );
+
+    console.log(`[VISITAS] Visita añadida - IP: ${log.ip}, Enlace: ${log.enlace_utm}`);
 
     ipsAfiliadas.push({
       ip: log.ip,
@@ -90,11 +81,13 @@ export const findAndSaveMatches = async (formdata) => {
   //----- SEGUNDO BUCLE: LEADS -----
   console.log("[LEADS] Iniciando análisis de leads");
   for (const { ip, fecha_log, enlace_utm } of ipsAfiliadas) {
-    const enlace = enlacesModificados.get(enlace_utm);
+    const enlace = await EnlaceAfiliado.findOne({
+      'registro_visitas.ip': ip,
+      nombre_enlace: enlace_utm.split("_").slice(1).join("_"), // ajusta si es necesario
+    });
+
     if (!enlace) {
-      console.log(
-        `[LEADS] Enlace no encontrado en memoria para UTM: ${enlace_utm}`
-      );
+      console.log(`[LEADS] Enlace no encontrado en BD para UTM: ${enlace_utm}`);
       continue;
     }
 
@@ -103,9 +96,7 @@ export const findAndSaveMatches = async (formdata) => {
     );
 
     if (logsContactoMismaIP.length === 0) {
-      console.log(
-        `[LEADS] No se encontraron páginas de contacto para IP: ${ip}`
-      );
+      console.log(`[LEADS] No se encontraron páginas de contacto para IP: ${ip}`);
       continue;
     }
 
@@ -131,30 +122,21 @@ export const findAndSaveMatches = async (formdata) => {
 
         enlace.leads = (enlace.leads || 0) + 1;
 
+        await enlace.save();
+
         console.log(`[LEADS] Lead añadido - Email: ${email}, IP: ${ip}`);
       }
     }
   }
 
-  //----- GUARDAR CAMBIOS EN TODOS LOS ENLACES -----
-  console.log("[GUARDAR] Guardando enlaces modificados...");
-  for (const [utm, enlace] of enlacesModificados.entries()) {
-    try {
-      await enlace.save();
-      console.log(`[GUARDAR] Guardado correcto para: ${utm}`);
-    } catch (err) {
-      console.error(`[ERROR GUARDADO] Enlace: ${utm} - ${err.message}`);
-    }
-  }
-
   console.log("[FINALIZADO] Proceso completado correctamente.");
 
-  // Actualizar fechas del sistema
+  //----- ACTUALIZAR FECHAS DEL SISTEMA -----
   const ultimoLog = logs[logs.length - 1];
 
   if (ultimoLog) {
     const systemMeta = await actualizarFechasSistema(
-      new Date(ultimoLog.fecha_log) // puede estar aqui el problemilla/bug
+      new Date(ultimoLog.fecha_log)
     );
     console.log(
       "Última fecha de log actualizada en el sistema:",
@@ -165,9 +147,7 @@ export const findAndSaveMatches = async (formdata) => {
       systemMeta.admin_fecha_ultima_actualizacion
     );
   } else {
-    console.warn(
-      "[ADVERTENCIA] No se encontraron logs para actualizar la fecha del sistema."
-    );
+    console.warn("[ADVERTENCIA] No se encontraron logs para actualizar la fecha del sistema.");
   }
 
   return {
