@@ -115,6 +115,5 @@ function UserDetailPage() {
   );
 }
 
-// Componente auxiliar para mostrar cada dato bonito
 
 export default UserDetailPage;

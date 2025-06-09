@@ -23,3 +23,5 @@ const taskSchema = new mongoose.Schema({
 })
 
 export default mongoose.model('Task', taskSchema);
+
+// este modelo no se useActionState, es el que segui de ejemplo para aprender a usar todo esto

@@ -7,12 +7,12 @@ export function parseContactCSV(csvText) {
   });
 
   const contactos = [];
+  // Ignora contactos anteriores al 6 de mayo de 2025
   const fechaMinima = new Date("2025-06-06");
 
   for (const row of records) {
     const fechaContacto = new Date(row["Fecha"]);
 
-    // Ignora contactos anteriores al 1 de mayo de 2025
     if (isNaN(fechaContacto) || fechaContacto < fechaMinima) continue;
 
     const contacto = {

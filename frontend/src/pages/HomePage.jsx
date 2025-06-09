@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 function LandingPage() {
   const { user } = useAuth();
 
-  let destination = "/login"; // por defecto
+  let destination = "/login";
 
   if (user) {
     if (user.is_admin) {
@@ -16,7 +16,7 @@ function LandingPage() {
   return (
     <div className="min-h-screen bg-[#202020] text-white">
       <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Hero */}
+      
         <section className="text-center mb-16">
           <h1 className="text-5xl font-bold mb-4">
             Gana dinero con Tamarit Affiliator
@@ -33,7 +33,6 @@ function LandingPage() {
           </Link>
         </section>
 
-        {/* Cómo funciona */}
         <section className="mb-16">
           <h2 className="text-3xl font-semibold mb-6 text-center">
             ¿Cómo funciona?
@@ -70,7 +69,6 @@ function LandingPage() {
           </div>
         </section>
 
-        {/* Normas */}
         <section className="mb-16">
           <h2 className="text-3xl font-semibold mb-4 text-center">
             Normas y condiciones
@@ -88,7 +86,6 @@ function LandingPage() {
           </ul>
         </section>
 
-        {/* Actualizaciones */}
         <section className="mb-16 text-center">
           <h2 className="text-3xl font-semibold mb-4">
             Actualización de datos
@@ -100,7 +97,6 @@ function LandingPage() {
           </p>
         </section>
 
-        {/* Legal */}
         <section className="mb-8 text-center">
           <h2 className="text-3xl font-semibold mb-4">Legal y privacidad</h2>
           <p className="text-gray-300 max-w-2xl mx-auto mb-2">
