@@ -102,8 +102,8 @@ function UserDetailPage() {
                   {link.comision != null ? `${link.comision} €` : "—"}
                 </td>
                 <td className="py-2 px-4">
-                  {link.total_generado != null
-                    ? `${link.total_generado} €`
+                  {link.ventas != null
+                    ? `${link.ventas} €`
                     : "—"}
                 </td>
               </tr>
