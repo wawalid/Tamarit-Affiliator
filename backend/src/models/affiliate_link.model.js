@@ -18,6 +18,10 @@ const afiliadoSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    id_afiliado: {
+      type: String,
+      required: true
+    },
     nombre_enlace: {
       type: String,
       required: true,
@@ -50,6 +54,6 @@ const afiliadoSchema = new mongoose.Schema(
   }
 );
 
-// afiliadoSchema.index({ user: 1, enlace_original: 1 }, { unique: true });
+afiliadoSchema.index({ user: 1, utm_campaign: 1 }, { unique: true });
 
 export default mongoose.model("EnlaceAfiliado", afiliadoSchema);

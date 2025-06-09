@@ -27,7 +27,10 @@ export const findAndSaveMatches = async (formdata) => {
 
     let enlace = enlacesModificados.get(log.enlace_utm);
     if (!enlace) {
-      enlace = await EnlaceAfiliado.findOne({ enlace_utm: log.enlace_utm });
+      enlace = await EnlaceAfiliado.findOne({
+        id_afiliado: log.id_afiliado,
+        nombre_enlace: log.utm_campaign,
+      });
       if (!enlace) {
         console.log(
           `[VISITAS] Enlace no encontrado para UTM: ${log.enlace_utm}`
@@ -146,15 +149,13 @@ export const findAndSaveMatches = async (formdata) => {
 
   console.log("[FINALIZADO] Proceso completado correctamente.");
 
-
-  
   // Actualizar fechas del sistema
   const ultimoLog = logs[logs.length - 1];
 
   if (ultimoLog) {
     const systemMeta = await actualizarFechasSistema(
-      new Date(ultimoLog.fecha_log)   // puede estar aqui el problemilla/bug
-);
+      new Date(ultimoLog.fecha_log) // puede estar aqui el problemilla/bug
+    );
     console.log(
       "Última fecha de log actualizada en el sistema:",
       systemMeta.admin_fecha_ultimo_log

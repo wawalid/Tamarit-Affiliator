@@ -12,9 +12,10 @@ export const createAffiliateLink = async (req, res) => {
     const newEnlace = new EnlaceAfiliado({
       user: req.user.id,
       nombre_enlace,
+      id_afiliado,
       enlace_original,
       enlace_utm,
-      id_afiliado,
+      
     });
 
     const savedEnlace = await newEnlace.save();

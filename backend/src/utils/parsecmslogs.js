@@ -14,10 +14,7 @@ export function parseCMSLogs(rawLogText) {
     const fechaStr = match[2];
     const urlPath = match[4];
 
-    // Parseamos la fecha original con offset
     const fechaLocal = parse(fechaStr, "dd/MMM/yyyy:HH:mm:ss X", new Date());
-
-    // Sumamos 2 horas
     const fechaLogConOffset = add(fechaLocal, { hours: 2 });
 
     const baseUrl = 'https://tamaritmotorcycles.com';
@@ -36,13 +33,15 @@ export function parseCMSLogs(rawLogText) {
     ) {
       const urlParams = new URLSearchParams(urlPath.split('?')[1]);
       const nombreEnlace = urlParams.get('utm_campaign') || '';
+      const idAfiliado = urlParams.get('id_afiliado') || '';
 
       logObj.enlace_utm = url;
-      logObj.nombre_enlace = nombreEnlace;
+      // logObj.nombre_enlace = nombreEnlace;
+      logObj.id_afiliado = idAfiliado;
+      logObj.utm_campaign = nombreEnlace; 
     }
 
     logs.push(logObj);
-    // console.log("logs parseados:", logObj);
   }
 
   return logs;
