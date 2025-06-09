@@ -78,58 +78,60 @@ export const findAndSaveMatches = async (formdata) => {
     });
   }
 
+  
+
   //----- SEGUNDO BUCLE: LEADS -----
-  console.log("[LEADS] Iniciando análisis de leads");
-  for (const { ip, fecha_log, enlace_utm } of ipsAfiliadas) {
-    const enlace = await EnlaceAfiliado.findOne({
-      'registro_visitas.ip': ip,
-      nombre_enlace: enlace_utm.split("_").slice(1).join("_"), // ajusta si es necesario
-    });
+  // console.log("[LEADS] Iniciando análisis de leads");
+  // for (const { ip, fecha_log, enlace_utm } of ipsAfiliadas) {
+  //   const enlace = await EnlaceAfiliado.findOne({
+  //     'registro_visitas.ip': ip,
+  //     nombre_enlace: enlace_utm.split("_").slice(1).join("_"), // ajusta si es necesario
+  //   });
 
-    if (!enlace) {
-      console.log(`[LEADS] Enlace no encontrado en BD para UTM: ${enlace_utm}`);
-      continue;
-    }
+  //   if (!enlace) {
+  //     console.log(`[LEADS] Enlace no encontrado en BD para UTM: ${enlace_utm}`);
+  //     continue;
+  //   }
 
-    const logsContactoMismaIP = logs.filter(
-      (l) => l.ip === ip && l.url.includes("contacto")
-    );
+  //   const logsContactoMismaIP = logs.filter(
+  //     (l) => l.ip === ip && l.url.includes("contacto")
+  //   );
 
-    if (logsContactoMismaIP.length === 0) {
-      console.log(`[LEADS] No se encontraron páginas de contacto para IP: ${ip}`);
-      continue;
-    }
+  //   if (logsContactoMismaIP.length === 0) {
+  //     console.log(`[LEADS] No se encontraron páginas de contacto para IP: ${ip}`);
+  //     continue;
+  //   }
 
-    for (const contacto_csv of contactos_csv) {
-      const fechaContacto = new Date(contacto_csv.fecha_contacto);
-      const email = contacto_csv.email.toLowerCase().trim();
+  //   for (const contacto_csv of contactos_csv) {
+  //     const fechaContacto = new Date(contacto_csv.fecha_contacto);
+  //     const email = contacto_csv.email.toLowerCase().trim();
 
-      if (ip === contacto_csv.ip && fechaContacto >= fecha_log) {
-        const leadExistente = enlace.registro_leads?.some(
-          (lead) => lead.contacto.toLowerCase().trim() === email
-        );
+  //     if (ip === contacto_csv.ip && fechaContacto >= fecha_log) {
+  //       const leadExistente = enlace.registro_leads?.some(
+  //         (lead) => lead.contacto.toLowerCase().trim() === email
+  //       );
 
-        if (leadExistente) {
-          console.log(`[LEADS] Lead duplicado ignorado: ${email}`);
-          continue;
-        }
+  //       if (leadExistente) {
+  //         console.log(`[LEADS] Lead duplicado ignorado: ${email}`);
+  //         continue;
+  //       }
 
-        enlace.registro_leads = enlace.registro_leads || [];
-        enlace.registro_leads.push({
-          contacto: contacto_csv.email,
-          fecha_lead: contacto_csv.fecha_contacto,
-        });
+  //       enlace.registro_leads = enlace.registro_leads || [];
+  //       enlace.registro_leads.push({
+  //         contacto: contacto_csv.email,
+  //         fecha_lead: contacto_csv.fecha_contacto,
+  //       });
 
-        enlace.leads = (enlace.leads || 0) + 1;
+  //       enlace.leads = (enlace.leads || 0) + 1;
 
-        await enlace.save();
+  //       await enlace.save();
 
-        console.log(`[LEADS] Lead añadido - Email: ${email}, IP: ${ip}`);
-      }
-    }
-  }
+  //       console.log(`[LEADS] Lead añadido - Email: ${email}, IP: ${ip}`);
+  //     }
+  //   }
+  // }
 
-  console.log("[FINALIZADO] Proceso completado correctamente.");
+  // console.log("[FINALIZADO] Proceso completado correctamente.");
 
   //----- ACTUALIZAR FECHAS DEL SISTEMA -----
   const ultimoLog = logs[logs.length - 1];

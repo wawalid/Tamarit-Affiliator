@@ -14,6 +14,11 @@ export function parseCMSLogs(rawLogText) {
     const fechaStr = match[2];
     const urlPath = match[4];
 
+    // Ignorar líneas que contengan /build o /storage
+    if (urlPath.startsWith("/build") || urlPath.startsWith("/storage")) {
+      continue;
+    }
+
     const fechaLocal = parse(fechaStr, "dd/MMM/yyyy:HH:mm:ss X", new Date());
     const fechaLogConOffset = add(fechaLocal, { hours: 2 });
 
@@ -36,12 +41,12 @@ export function parseCMSLogs(rawLogText) {
       const idAfiliado = urlParams.get('id_afiliado') || '';
 
       logObj.enlace_utm = url;
-      // logObj.nombre_enlace = nombreEnlace;
       logObj.id_afiliado = idAfiliado;
-      logObj.utm_campaign = nombreEnlace; 
+      logObj.utm_campaign = nombreEnlace;
     }
 
     logs.push(logObj);
+    console.log("logs parseados: ", logs)
   }
 
   return logs;
