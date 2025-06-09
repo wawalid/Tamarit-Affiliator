@@ -46,7 +46,7 @@ export function parseCMSLogs(rawLogText) {
     }
 
     logs.push(logObj);
-    console.log("logs parseados: ", logs)
+    // console.log("logs parseados: ", logs)
   }
 
   return logs;

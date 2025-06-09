@@ -33,7 +33,7 @@ router.post(
       const contactosNombreValido =
         nombreContactos.includes("contact") || nombreContactos.endsWith(".csv");
 
-      if (!contactosNombreValido) {
+      if (!logsNombreValido || !contactosNombreValido) {
         return res.status(400).json({
           success: false,
           message:
@@ -71,7 +71,7 @@ router.post(
       res.status(200).json({
         success: true,
         message: "Datos procesados correctamente.",
-        // ...respuesta_procesamiento, // si luego quieres incluir visitas/leads
+        ...respuesta_procesamiento, // si luego quieres incluir visitas/leads
       });
     } catch (error) {
       console.error("❌ Error general en /api/admin/match:", error);
