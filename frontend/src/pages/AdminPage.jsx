@@ -65,8 +65,8 @@ useEffect(() => {
 
 
   return (
-    <div className="p-8 flex gap-8">
-      <div className="w-2/3">
+<div className="p-4 md:p-8 flex flex-col md:flex-row gap-8">
+<div className="w-full md:w-2/3">
         <h1 className="text-center text-2xl font-bold mb-8 text-white">
           Manage users
         </h1>
@@ -128,7 +128,7 @@ useEffect(() => {
         </div>
       </div>
 
-      <div className="w-1/3 bg-zinc-800 text-white p-6 rounded shadow-lg h-fit">
+<div className="w-full md:w-1/3 bg-zinc-800 text-white p-6 rounded shadow-lg h-fit">
         <h2 className="text-xl font-semibold mb-4">Upload files</h2>
         <div className="mb-4">
           <label className="block mb-1">Logs CMS (access):</label>
@@ -172,13 +172,13 @@ useEffect(() => {
         )}
         <div className={`mt-4 p-4 rounded bg-zinc-700`}>
           <div className={`mt-4 p-4 rounded bg-zinc-700`}>
-            <p className="font-semibold">
+<p className="font-semibold break-words text-sm md:text-base">
               Last update:{" "}
               {ultimaActualizacion
                 ? format(ultimaActualizacion, "dd/MM/yyyy HH:mm:ss")
                 : "Has not yet been updated"}
             </p>
-            <p className="font-semibold">
+<p className="font-semibold break-words text-sm md:text-base">
               Last log update:{" "}
               {ultimoLog
                 ? format(ultimoLog, "dd/MM/yyyy HH:mm:ss")
