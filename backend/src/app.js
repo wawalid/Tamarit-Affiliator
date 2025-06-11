@@ -16,9 +16,10 @@ const app = express();
 // 👇 Añade aquí tu dominio de frontend en producción
 const allowedOrigins = [
   "http://localhost:5173",
-  // "http://192.168.1.146:5173",
+  "http://192.168.1.146:5173",
   "http://192.168.0.27:5173",
-  "https://front-production-aa1f.up.railway.app"
+  // "https://front-production-aa1f.up.railway.app",
+  "https://backend-render-so3i.onrender.com"
 ];
 
 app.use(cors({
