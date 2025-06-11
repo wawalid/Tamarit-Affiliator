@@ -1,5 +1,5 @@
 docker-compose.yml
 ./backend/.env
-./frontend/.env
+backend/.env
 
 
