@@ -18,7 +18,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://192.168.1.146:5173",
   "http://192.168.0.27:5173",
-  // "https://front-production-aa1f.up.railway.app",
+  "https://front-production-aa1f.up.railway.app",
   "https://frontend-render-cx1g.onrender.com"
 ];
 
